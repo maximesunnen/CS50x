@@ -79,3 +79,13 @@ def login():
     
     # If no redirect to "index", render login template again
     return render_template("auth/login.html")
+
+# Before each request, check if user is logged in. Yes: save user information in g.user; No: save None in g.user
+@bp.before_app_request
+def load_logged_in_user():
+    user_id = session.get("user_id")
+    
+    if user_id == None:
+        g.user = None
+    else:
+        g.user = get_db().execute("SELECT * FROM USER WHERE id = ?", (user_id,)).fetchone()
