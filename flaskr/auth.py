@@ -37,14 +37,8 @@ def register():
             return redirect(url_for("auth.login"))
         
         flash(error)
-    
-    questions = {}
-    questions[1] = "Ech sin domat averstanen, dass vu mengem Kand Fotoe gemaach gin."
-    questions[2] = "Ech sin domat averstanen, dass Fotoen, déi am Laf vu (Gruppen)Aktivitéiten vu mengem Kand gemach goufen, op de soziale Medien (Facebook) vum Käler Scoutsgrupp gedeelt kenne gin."
-    questions[3] = "Ech sin domat averstanen, dass meng Email Adress an Telefonsnummer benotzt gin, fir vun de Cheffe kontaktéiert ze gin."
-    questions[4] = "Mäi Kand dierf no der Versammlung eleng heem goen."
         
-    return render_template("auth/register.html", questions=questions)
+    return render_template("auth/register.html")
 
 @bp.route("/login", methods = ["GET", "POST"]) # endpoint argument omitted, therefore endpoint defaults to the name of the view function (here login)
 def login():
