@@ -1,0 +1,370 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block content %}
+<!-- Information section -->
+<section class="px-5 pt-5">
+    <!-- Informatiounen -->
+    <div class="container bg-light">
+        <h3>Informatiounen</h3>
+        <ul>
+            <li>Test</li>
+            <li>test</li>
+        </ul>
+    </div>
+</section>
+
+<!-- Coordinates section -->
+<section class="px-5 pt-5">
+
+    <!-- Coordonnéeën vum Kand -->
+    <div class="container bg-scoutGreen mb-3">
+        <h3>Coordonnéeën vum Kand</h3>
+    </div>
+
+    <div class="container">
+        <form class="row g-3 needs-validation" novalidate>
+            <!-- Numm -->
+            <div class="col-md-4">
+                <label for="validationCustom01" class="form-label">Numm</label>
+                <input type="text" class="form-control" id="validationCustom01" required>
+            </div>
+
+            <!-- Virnumm -->
+            <div class="col-md-4">
+                <label for="validationCustom02" class="form-label">Virnumm</label>
+                <input type="text" class="form-control" id="validationCustom02" required>
+            </div>
+
+            <!-- Pseudonym -->
+            <div class="col-md-4">
+                <label for="validationCustomUsername" class="form-label">Pseudonym</label>
+                <div class="input-group has-validation">
+                    <span class="input-group-text" id="inputGroupPrepend">@</span>
+                    <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
+                    <div class="invalid-feedback">
+                    Please choose a username.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gebuertsdatum -->
+            <div class="col-md-4">
+                <label for="validationCustomDate" class="form-label">Gebuertsdatum (DD/MM/JJ)</label>
+                <button type="button" class="btn p-0 m-0" data-bs-toggle="tooltip" data-bs-placement="top" data-html="true" title="Ärt Kand muss virum 15. September 2017 gebuer sin!">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+                <input class="form-control" type="date" id="validationCustomDate" required>
+            </div>
+
+            <!-- Geschlecht -->
+            <div class="col-md-4">
+                <label for="genderGroup" class="form-label">Geschlecht</label>
+
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="RadioGender" id="RadioGender1">
+                    <label class="form-check-label" for="RadioGener1">
+                      Männlech
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="RadioGender" id="RadioGender2" checked>
+                    <label class="form-check-label" for="RadioGender2">
+                      Weiblech
+                    </label>
+                  </div>
+            </div>
+
+            <!-- Nationalitéit -->
+            <div class="col-md-4">
+                <label for="validationCustom03" class="form-label">Nationalitéit</label>
+                <select class="form-select bfh-countries" data-country="LU" data-flags="true"></select>
+            </div>
+
+            <!-- Hausnummer -->
+            <div class="col-md-2 me-3">
+                <label for="houseNumber" class="form-label">Hausnummer</label>
+                <input type="number" class="form-control" id="houseNumber" required>
+                <div class="invalid-feedback">
+                    Gitt eng Hausnummer un!
+                </div>
+            </div>
+
+            <!-- Strooss -->
+            <div class="col-md-4">
+                <label for="street" class="form-label">Strooss</label>
+                <input type="text" class="form-control" id="street" required>
+                <div class="invalid-feedback">
+                    Gitt eng Strooss un!
+                </div>
+            </div>
+
+            <!-- Uertschaft -->
+            <div class="col-md-4">
+                <label for="validationCustom03" class="form-label">Uertschaft</label>
+                <input type="text" class="form-control" id="validationCustom03" required>
+                <div class="invalid-feedback">
+                    Gitt eng Uertschaft un!
+                </div>
+            </div>
+
+            <!-- Land -->
+            <div class="col-md-3">
+                <label for="country" class="form-label">Land</label>
+                <select class="form-select bfh-countries" data-country="LU" data-flags="true" id="country"></select>
+            </div>
+
+            <!-- Postleitzuel -->
+            <div class="col-md-3">
+                <label for="validationCustom05" class="form-label">Postleitzuel</label>
+                <input type="number" class="form-control" id="validationCustom05" required>
+                <div class="invalid-feedback">
+                    Gidd eng Postleitzuel un!
+                </div>
+            </div>
+
+            <!-- Branche -->
+            <div class="col-md-3">
+                <label for="validationCustom04" class="form-label">Branche</label>
+                <select class="form-select" id="validationCustom04" required>
+                    <option selected disabled value="">Wielen...</option>
+                    <option>Wëllefcher</option>
+                    <option>Rover</option>
+                    <option>Pio</option>
+                    <option>Alba</option>
+                </select>
+                <div class="invalid-feedback">
+                    Please select a valid state.
+                </div>
+            </div>
+
+            <!-- Allergies -->
+            <div class="row mt-5">
+                <div class="col-md-12 bg-light my-3">
+                    <label for="allergies" class="form-label">Mäi Kand huet <strong>Allergien</strong> op...</label>
+                    <input type="text" class="form-control" id="allergies">
+                </div>
+
+                <div class="col-md-12 bg-light my-3">
+                    <label for="diet" class="form-label">Mäi Kand huet e <strong>speziellen</strong> Régime (z.B vegetaresch, vegan)...</label>
+                    <input type="text" class="form-control" id="diet">
+                </div>
+
+                <div class="col-md-12 bg-light my-3">
+                    <label for="otherInformation" class="form-label">Aner Matdeelungen iwwert Ärt Kand...</label>
+                    <textarea class="form-control" id="otherInformation"></textarea>
+                </div>
+            </div>
+
+            <!-- Coordonnéeën Elteren -->
+            <div class="bg-scoutGreen mb-3 mt-5">
+                <h3>Coordonnéeën vun den Elteren</h3>
+            </div>
+            
+            <!-- Elteren 1 -->
+            
+            <div class="row g-3 bg-light mb-2 pb-2">
+                <!-- Numm -->
+                <div class="col-md-4">
+                    <label for="lastNameParent1" class="form-label">Numm</label>
+                    <input type="text" class="form-control" id="lastNameParent1" required>
+                </div>
+                
+                <!-- Virnumm -->
+                <div class="col-md-4">
+                    <label for="firstNameParent1" class="form-label">Virnumm</label>
+                    <input type="text" class="form-control" id="firstNameParent1" required>
+                </div>
+
+
+                <!-- Handynummer -->
+                <div class="col-md-4">
+                    <label for="numberParent1" class="form-label">Handynummer</label>
+                    <input type="text" class="form-control" id="numberParent1" required>
+                </div>
+                
+                <!-- Email -->
+                <div class="col-md-6">
+                    <label for="emailParent1" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="emailParent1" required>
+                </div>
+            </div>
+            
+            <hr/> 
+            
+            <!-- Elteren 2 -->
+            
+            <div class="row bg-light g-3 mt-2 pb-2">
+                <!-- Numm -->
+                <div class="col-md-4">
+                    <label for="lastNameParent2" class="form-label">Numm</label>
+                    <input type="text" class="form-control" id="lastNameParent2" required>
+                </div>
+                
+                <!-- Virnumm -->
+                <div class="col-md-4">
+                    <label for="firstNameParent2" class="form-label">Virnumm</label>
+                    <input type="text" class="form-control" id="firstNameParent2" required>
+                </div>
+                
+
+                <!-- Handynummer -->
+                <div class="col-md-4">
+                    <label for="numberParent2" class="form-label">Handynummer</label>
+                    <input type="text" class="form-control" id="numberParent2" required>
+                </div>
+                
+                <!-- Email -->
+                <div class="col-md-6">
+                    <label for="emailParent2" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="emailParent2" required>
+                </div>
+            </div>
+            
+            
+            <!-- Coordonnéeën Urgence -->
+            <div class="bg-scoutGreen mb-3 mt-5">
+                <h3>Persoun déi soll kontaktéiert gin, wann d'Elteren nët ze areechen sin</h3>
+            </div>
+            
+            <div class="row bg-light g-3 mt-2 pb-2">
+                <!-- Numm -->
+                <div class="col-md-4">
+                    <label for="lastNameEmergency" class="form-label">Numm</label>
+                    <input type="text" class="form-control" id="lastNameEmergency" required>
+                </div>
+                
+                <!-- Virnumm -->
+                <div class="col-md-4">
+                    <label for="firstNameEmergency" class="form-label">Virnumm</label>
+                    <input type="text" class="form-control" id="firstNameEmergency" required>
+                </div>
+                
+                <!-- Telefonsnummer -->
+                <div class="col-md-4">
+                    <label for="numberEmergency" class="form-label">Telefonsnummer</label>
+                    <input type="text" class="form-control" id="numberEmergency" required>
+                </div>
+                
+                <!-- Handynummer -->
+                <div class="col-md-4 ms-auto">
+                    <label for="phoneEmergency" class="form-label">Handynummer</label>
+                    <input type="text" class="form-control" id="phoneEmergency" required>
+                </div>
+            </div>
+
+            <div class="row bg-light g-3 mt-2 pb-2">
+                <!-- Hausnummer -->
+                <div class="col-md-2 me-3">
+                    <label for="houseNumberEmergency" class="form-label">Hausnummer</label>
+                    <input type="number" class="form-control" id="houseNumberEmergency" required>
+                    <div class="invalid-feedback">
+                        Gitt eng Hausnummer un!
+                    </div>
+                </div>
+
+                <!-- Strooss -->
+                <div class="col-md-4">
+                    <label for="streetEmergency" class="form-label">Strooss</label>
+                    <input type="text" class="form-control" id="streetEmergency" required>
+                    <div class="invalid-feedback">
+                        Gitt eng Strooss un!
+                    </div>
+                </div>
+
+                <!-- Uertschaft -->
+                <div class="col-md-4">
+                    <label for="townEmergency" class="form-label">Uertschaft</label>
+                    <input type="text" class="form-control" id="townEmergency" required>
+                    <div class="invalid-feedback">
+                        Gitt eng Uertschaft un!
+                    </div>
+                </div>
+
+                <!-- Land -->
+                <div class="col-md-3">
+                    <label for="countryEmergency" class="form-label">Land</label>
+                    <select class="form-select bfh-countries" data-country="LU" data-flags="true" id="countryEmergency"></select>
+                </div>
+
+                <!-- Postleitzuel -->
+                <div class="col-md-3">
+                    <label for="zipEmergency" class="form-label">Postleitzuel</label>
+                    <input type="number" class="form-control" id="zipEmergency" required>
+                    <div class="invalid-feedback">
+                        Gidd eng Postleitzuel un!
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Froën -->
+            <div class="row mt-3 bg-scoutYellow rounded">
+                {% for question_id, question_text in questions.items() %}
+                <div class="form-check form-switch form-check-reverse my-2">
+                    <input class="form-check-input" type="checkbox" id="question1">
+                    <label class="form-check-label" for="question{{ question_id }}">{{ question_text }}</label>
+                </div>
+                {% endfor %}
+            </div>
+            
+            
+            <!-- Checkbox -->
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                    <label class="form-check-label" for="invalidCheck">
+                    Agree to terms and conditions
+                    </label>
+                    <div class="invalid-feedback">
+                    You must agree before submitting.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Button -->
+            <div class="col-12 my-3">
+                <button class="btn btn-primary" type="submit">Registréieren</button>
+            </div>
+
+        </form>
+    </div>
+</section>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields, https://getbootstrap.com/docs/5.0/forms/validation/
+    (function () {
+      'use strict'
+    
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.querySelectorAll('.needs-validation')
+    
+      // Loop over them and prevent submission
+      Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+          form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+              event.preventDefault()
+              event.stopPropagation()
+            }
+    
+            form.classList.add('was-validated')
+          }, false)
+        })
+    })()
+
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+
+<script>
+    $('.countrypicker').countrypicker();
+</script>
+
+{% endblock %}
