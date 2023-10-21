@@ -1,3 +1,14 @@
+<!-- Jinja variable -->
+{% set navigation_bar = [
+  ('/' , 'Home'),
+  ('/apply' , 'Umellen'),
+  ('/news' , 'News'),
+  ('/shop' , 'Shop'),
+  ('/contact' , 'Kontakt')
+] -%}
+
+{% set active_page = active_page|default('/') -%}
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -25,6 +36,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1, width=device-width">
 
+        {% block head %} {% endblock %}
+
         <!-- Different title for each page: Jinja placeholder -->
         <title>Kayler Scouten: {% block title %}{% endblock %}</title>
     </head>
@@ -44,17 +57,6 @@
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon"></span>
               </button>
-
-                <!-- Jinja variable -->
-                {% set navigation_bar = [
-                    ('/' , 'Home'),
-                    ('/apply' , 'Umellen'),
-                    ('/news' , 'News'),
-                    ('/shop' , 'Shop'),
-                    ('/contact' , 'Contact')
-                    ] -%}
-
-                {% set active_page = active_page|default('/') -%}
 
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <div class="navbar-nav">
