@@ -2,6 +2,38 @@
     background-color: #009c9b;
 }
 
+.txt-scoutGreen {
+    color: #009c9b;
+}
+
 .bg-scoutYellow {
     background-color: #f9bb007d;
+}
+
+.txt-scoutYellow {
+    color: #f9bb007d;
+}
+
+#map {
+    position: relative;
+    width: 100%;
+    height: 400px; 
+}
+
+.card-img {
+    height: 150px;
+    width: 150px;
+}
+
+.card-title {
+    font-size: x-large;
+}
+
+.card-text {
+    font-size: larger;
+}
+
+.black-link {
+    text-decoration: none;
+    color: black;
 }
