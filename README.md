@@ -12,4 +12,19 @@ The webpage should contain different routes:
 
 The backend contains a SQLite3 database where information from the forms is saved. **Important:** will have to check how this works with data protection. Probably need help from somebody who knows how to deal with "sensitive" information. A disclaimer that the data will be stored is most likely not sufficient. What is the standard for protecting data?
 
+# Demo
+Clone the repo and run the following command in your terminal (make sure you're inside the project directory).
+
+`flask --app flaskr run --debug`
+
+Make sure Python is installed.
+
+-   Check with `python` in your terminal
+-   if not installed: <https://www.python.org/downloads/>
+
+Make sure Flask is installed.
+`$ pip install Flask`
+
+
+
 
