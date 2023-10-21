@@ -28,3 +28,7 @@ def apply():
     questions[4] = "Mäi Kand dierf no der Versammlung eleng heem goen."
     
     return render_template("index/apply.html", questions=questions)
+
+@bp.route("/contact")
+def contact():
+    return render_template("index/contact.html")
