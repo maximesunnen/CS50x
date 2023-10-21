@@ -17,12 +17,13 @@ Clone the repo and run the following command in your terminal (make sure you're 
 
 `flask --app flaskr run --debug`
 
-Make sure Python is installed.
+## Make sure Python is installed.
 
 -   Check with `python` in your terminal
 -   if not installed: <https://www.python.org/downloads/>
 
-Make sure Flask is installed.
+## Make sure Flask is installed.
+
 `$ pip install Flask`
 
 
