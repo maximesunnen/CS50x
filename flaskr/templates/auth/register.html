@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title%}
+    Registréieren
+{% endblock %}
+
+{% block content %}
+<section class="p-5">
+    <div class="container">
+        <form method="POST" action="{{ url_for('auth.register') }}" class="row needs-validation justify-content-center" novalidate>
+            <div class="col-md-5">
+                <div class="row my-3 justify-content-center">
+                    <div class="col-md-12 p-0">
+                        <h3 class="txt-scoutGreen">Registréieren</h3>
+                    </div>
+                </div>
+                <div class="row my-3 p-3 border bg-light">
+                    <!-- Virnumm -->
+                    <div class="col-md-6 mb-3">
+                        <label for="firstName" class="form-label">Virnumm</label>
+                        <input type="text" class="form-control" name="firstName" id="firstName" required>
+                    </div>
+                    <!-- Numm -->
+                    <div class="col-md-6 mb-3">
+                        <label for="lastName" class="form-label">Numm</label>
+                        <input type="text" class="form-control" name="lastName" id="lastName" required>
+                    </div>
+
+                    <!-- Usernumm -->
+                    <div class="col-md-6 mb-3">
+                        <label for="userName" class="form-label">Usernumm</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text" id="inputGroupPrepend">@</span>
+                            <input type="text" class="form-control" name="username" id="userName" required>
+                        </div>
+                    </div>
+
+                    <!-- Passwuert -->
+                    <div class="col-md-6 mb-3">
+                        <label for="password" class="form-label">Passwuert</label>
+                        <input type="text" class="form-control" name="password" id="password" required>
+                    </div>
+
+                    <!-- Ghost column -->
+                    <div class="col-md-6 mb-3"></div>
+
+                    <!-- Passwuert bestätegen -->
+                    <div class="col-md-6">
+                        <label for="passwordConfirm" class="form-label">Passwuert bestätegen</label>
+                        <input type="text" class="form-control" name="passwordConfirm" id="passwordConfirm" required>
+                    </div>
+                </div>
+
+                <div class="row my-3">
+                    <!-- Gebuertsdatum -->
+                    <div class="col-md-5 mb-3">
+                        <label for="birthDate" class="form-label">Gebuertsdatum (DD/MM/JJ)</label>
+                        <input class="form-control" type="date" name="birthDate" id="birthDate" required>
+                    </div>
+
+                    <!-- Geschlecht -->
+                    <div class="col-md-7 mb-3">
+                        <label class="form-label">Geschlecht</label>
+                        <br>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="weiblech" checked>
+                            <label class="form-check-label" for="genderFemale">weiblech</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="genderMale" value="männlech">
+                            <label class="form-check-label" for="genderMale">männlech</label>
+                          </div>
+                    </div>
+
+                    <!-- Hausnummer -->
+                    <div class="col-md-2 mb-3">
+                        <label for="houseNumber" class="form-label">Nr.</label>
+                        <input type="text" class="form-control" name="houseNumber" id="houseNumber" required>
+                    </div>
+
+                    <!-- Strooss -->
+                    <div class="col-md-5 mb-3">
+                        <label for="street" class="form-label">Strooss</label>
+                        <input type="text" class="form-control" name="street" id="street" required>
+                    </div>
+
+                    <!-- Uertschaft -->
+                    <div class="col-md-5 mb-3">
+                        <label for="town" class="form-label">Uertschaft</label>
+                        <input type="text" class="form-control" name="town" id="town" required>
+                    </div>
+
+                    <!-- Land -->
+                    <div class="col-md-8 mb-3">
+                        <label for="country" class="form-label">Land</label>
+                        <select class="form-select bfh-countries" data-available="LU,DE,BE,FR" data-country="LU" id="country" name="country"></select>
+                    </div>
+
+                    <!-- Postleitzuel -->
+                    <div class="col-md-4 mb-3">
+                        <label for="zip" class="form-label">Postleitzuel</label>
+                        <input type="number" class="form-control" id="zip" name="zip" required>
+                    </div>
+
+                    <!-- Konditiounen -->
+                    <div class="col-md-4">
+                        <p>
+                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#conditions">
+                            Konditiounen
+                            </button>
+                        </p>
+                            <ol class="collapse bg-light border" id="conditions">
+                                <li>test</li>
+                                <li></li>
+                            </ol>
+                    </div>
+                      
+                    <!-- Checkbox Konditiounen -->
+                    <div class="col-md-12 mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="ok" name="conditionsCheck" id="conditionsCheck" required>
+                            <label class="form-check-label" for="conditionsCheck">
+                            Ech stëmmen de Konditiounen zou.
+                            </label>
+                            <div class="invalid-feedback">
+                            Dir musst de Konditiounen zoustëmmen.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Button -->
+                    <div class="col-md-12">
+                        <button class="btn bg-scoutYellow" type="submit">Registréieren</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields, https://getbootstrap.com/docs/5.0/forms/validation/
+    (function () {
+      'use strict'
+    
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.querySelectorAll('.needs-validation')
+    
+      // Loop over them and prevent submission
+      Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+          form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+              event.preventDefault()
+              event.stopPropagation()
+            }
+    
+            form.classList.add('was-validated')
+          }, false)
+        })
+    })()
+
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+
+<script>
+    $('.countrypicker').countrypicker();
+</script>
+{% endblock %}
