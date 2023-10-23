@@ -9,36 +9,61 @@ from flaskr.db import get_db
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
-@bp.route("/register", methods = ["GET", "POST"])
+@bp.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        # user info dictionary
+        user_info = {
+            "first_name": request.form.get("firstName"),
+            "last_name":request.form.get("lastName"),
+            "username": request.form.get("username"),
+            "password": request.form.get("password"),
+            "password_confirm": request.form.get("passwordConfirm"),
+            "birthday": request.form.get("birthDate"),
+            "gender": request.form.get("gender"),
+            "house_number": request.form.get("houseNumber"),
+            "street": request.form.get("street"),
+            "town": request.form.get("town"),
+            "country": request.form.get("country"),
+            "zip": request.form.get("zip"),
+            "conditions": request.form.get("conditionsCheck")
+        }
+        
+        # if any input is false (None or empty string), return register.html; otherwise redirect to login
+        for info in user_info:
+            if not user_info[info]:
+                flash("Fëllt all d'Felder w.e.g aus")
+                return render_template("auth/register.html")
+        
+        # initialize error to None
         error = None
         
-        # Connect to database
-        db = get_db()
+        # Check if both passwords are identical
+        if user_info["password"] != user_info["password_confirm"]:
+            error = "Dir hudd zwee verschidden Passwieder agin."
+            
+        else:
+            # Connect to database
+            db = get_db()
         
-        if not username:
-            error = "Username is missing."
-            
-        elif not password:
-            error = "Password is missing"
-            
         if error is None:
             try:
-                # db.execute and db.commit are part of the database connection object returned by get_db()
-                db.execute("INSERT INTO user (username, password) VALUES (?, ?)", (username, generate_password_hash(password)))
+                # `db.execute` and `db.commit`: part of database connection object returned by `get_db()`
+                db.execute("INSERT INTO user (username, firstName, lastName, password, birthday, gender) VALUES (?, ?, ?, ?, ?, ?)", (user_info["username"], user_info["first_name"], user_info["last_name"], generate_password_hash(user_info["password"]), user_info["birthday"], user_info["gender"]))
                 db.commit()
             
             except db.IntegrityError:
-                error = f"User {username} already exists."
+                error = f"User {user_info['username']} gëtt et schon."
             
-            return redirect(url_for("auth.login"))
-        
+            else:
+                flash("Dir gouft registréiert!")
+                return redirect(url_for("auth.login"))
+            
         flash(error)
-        
-    return render_template("auth/register.html")
+        return redirect(url_for("auth.register"))
+
+    # GET
+    return render_template("auth/register.html", txt_color="text-danger")
 
 @bp.route("/login", methods = ["GET", "POST"]) # endpoint argument omitted, therefore endpoint defaults to the name of the view function (here login)
 def login():
@@ -78,7 +103,7 @@ def login():
         flash(error)
     
     # If no redirect to "index", render login template again
-    return render_template("auth/login.html")
+    return render_template("auth/login.html", txt_color="text-success")
 
 # Before each request, check if user is logged in. Yes: save user information in g.user; No: save None in g.user
 @bp.before_app_request
