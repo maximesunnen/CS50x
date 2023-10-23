@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS address;
-DROP TABLE IF EXISTS parent1;
-DROP TABLE IF EXISTS parent2;
+DROP TABLE IF EXISTS parent;
+DROP TABLE IF EXISTS parent_child;
 
 -- Table to store user (child) information
 CREATE TABLE user (
@@ -10,9 +10,8 @@ CREATE TABLE user (
   firstName TEXT NOT NULL,
   lastName TEXT NOT NULL,
   password TEXT NOT NULL,
-  birthdate DATE NOT NULL,
-  sex TEXT NOT NULL,
-  nationality TEXT NOT NULL,
+  birthday DATE NOT NULL,
+  gender TEXT NOT NULL,
   allergies TEXT,
   diet TEXT,
   otherInformation TEXT
@@ -40,7 +39,7 @@ CREATE TABLE parent (
   mobilePhone TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
   FOREIGN KEY (user_id) REFERENCES user(id)
-)
+);
 
 -- Junction table with composite key
 /* 
@@ -52,6 +51,6 @@ CREATE TABLE parent_child (
   parent_id INTEGER NOT NULL,
   child_id INTEGER NOT NULL,
   PRIMARY KEY (parent_id, child_id),
-  FOREIGN KEY (parent_id) REFERENCES parent (id)
+  FOREIGN KEY (parent_id) REFERENCES parent (id),
   FOREIGN KEY (child_id) REFERENCES user (id)
-)
+);
