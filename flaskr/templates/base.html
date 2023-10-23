@@ -81,6 +81,10 @@
             </div>
           </nav>
 
+          {% for message in get_flashed_messages() %}
+          <div class="flash text-center {{txt_color}} pt-5 fs-3 border">{{ message }}</div>
+          {% endfor %}
+          
           {% block content%} {% endblock %}
     </body>
     
