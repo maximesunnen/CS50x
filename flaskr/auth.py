@@ -14,56 +14,70 @@ def register():
     if request.method == "POST":
         # user info dictionary
         user_info = {
-            "first_name": request.form.get("firstName"),
-            "last_name":request.form.get("lastName"),
+            "first_name": request.form.get("first_name").upper(),
+            "last_name":request.form.get("last_name").upper(),
             "username": request.form.get("username"),
             "password": request.form.get("password"),
             "password_confirm": request.form.get("passwordConfirm"),
-            "birthday": request.form.get("birthDate"),
-            "gender": request.form.get("gender"),
-            "house_number": request.form.get("houseNumber"),
-            "street": request.form.get("street"),
-            "town": request.form.get("town"),
+            "birthday": request.form.get("birthday"),
+            "gender": request.form.get("gender").upper(),
+            "house_number": request.form.get("house_number"),
+            "street": request.form.get("street").upper(),
+            "town": request.form.get("town").upper(),
             "country": request.form.get("country"),
             "zip": request.form.get("zip"),
             "conditions": request.form.get("conditionsCheck")
         }
         
-        # if any input is false (None or empty string), return register.html; otherwise redirect to login
+        # If falsy input, return register.html
         for info in user_info:
             if not user_info[info]:
                 flash("Fëllt all d'Felder w.e.g aus")
                 return render_template("auth/register.html")
         
-        # initialize error to None
-        error = None
-        
-        # Check if both passwords are identical
+        # If passwords not identical, return register.html
         if user_info["password"] != user_info["password_confirm"]:
             error = "Dir hudd zwee verschidden Passwieder agin."
+            return render_template("auth/register.html")
             
-        else:
-            # Connect to database
-            db = get_db()
+        # Initialize error to None:
+        error = None
         
-        if error is None:
-            try:
-                # `db.execute` and `db.commit`: part of database connection object returned by `get_db()`
-                db.execute("INSERT INTO user (username, firstName, lastName, password, birthday, gender) VALUES (?, ?, ?, ?, ?, ?)", (user_info["username"], user_info["first_name"], user_info["last_name"], generate_password_hash(user_info["password"]), user_info["birthday"], user_info["gender"]))
-                db.commit()
+        # Connect to database
+        db = get_db()
+        
+        try:
+            # `db.execute` and `db.commit`: part of database connection object returned by `get_db()`
             
-            except db.IntegrityError:
-                error = f"User {user_info['username']} gëtt et schon."
+            # insert into user table
+            db.execute("INSERT INTO user (username, first_name, last_name, password, birthday, gender) VALUES (?, ?, ?, ?, ?, ?)", (user_info["username"], user_info["first_name"], user_info["last_name"], generate_password_hash(user_info["password"]), user_info["birthday"], user_info["gender"],))
             
-            else:
-                flash("Dir gouft registréiert!")
-                return redirect(url_for("auth.login"))
+        except db.IntegrityError:
+            error = f"User {user_info['username']} gëtt et schon."
+            flash (error)
+            return render_template(url_for("auth.register"), txt_color="text-danger")
             
-        flash(error)
-        return redirect(url_for("auth.register"))
+        try:
+            # catch id
+            id = db.execute("SELECT id FROM user WHERE username = ?", (user_info["username"],)).fetchone()[0]
+
+            # insert into address table
+            db.execute("INSERT INTO address (user_id, house_number, street, town, country, zip) VALUES (?, ?, ?, ?, ?, ?)", (id, user_info["house_number"], user_info["street"], user_info["town"], user_info["country"], user_info["zip"],))
+            
+        except db.IntegrityError:
+            error = f"Database integrity error at address table insertion"
+            flash(error)
+            return render_template(url_for("auth.register"), txt_color="text-danger")
+        
+        # commit db query
+        db.commit()
+        
+        # Flash success message and redirect to login
+        flash("Dir gouft registréiert!")
+        return redirect(url_for("auth.login"))
 
     # GET
-    return render_template("auth/register.html", txt_color="text-danger")
+    return render_template("auth/register.html")
 
 @bp.route("/login", methods = ["GET", "POST"]) # endpoint argument omitted, therefore endpoint defaults to the name of the view function (here login)
 def login():
@@ -74,13 +88,13 @@ def login():
         error = None
         
         if not username:
-            error = "Username missing."
+            error = "Usernumm feelt."
             
         elif not password:
-            error = "Password missing."
+            error = "Passwuert feelt."
         
         # Connect to database
-        db = get_db
+        db = get_db()
 
         user = db.execute("SELECT * FROM user WHERE username = ?", (username,)).fetchone() 
             # (username,): trailing comma to create single-element tuple
@@ -88,21 +102,23 @@ def login():
             # no db.commit() needed because database not modified
             
         if not user:
-            error = "Username does not exist."
+            error = "Usernumm gëtt et nët."
         
         elif not check_password_hash(user["password"], password):
-            error = "Wrong password."
+            error = "Falscht Passwuert."
             
         if error == None:
             # Add session
             session.clear()
             session["user_id"] = user["id"]
             
-            return redirect(url_for("index"))
+            return redirect(url_for("index.index"))
         
-        flash(error)
-    
-    # If no redirect to "index", render login template again
+        else:
+            flash(error)
+            return render_template("auth/login.html", txt_color="text-danger")
+        
+    # GET
     return render_template("auth/login.html", txt_color="text-success")
 
 # Before each request, check if user is logged in. Yes: save user information in g.user; No: save None in g.user
@@ -116,10 +132,15 @@ def load_logged_in_user():
         g.user = get_db().execute("SELECT * FROM USER WHERE id = ?", (user_id,)).fetchone()
 
 # Log the user out by clearing the session
-@bp.route('/logout')
+@bp.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for("index"))
+
+# Account view
+@bp.route("/account")
+def account():
+    return render_template("auth/account.html")
 
 # Define login decorator
 def login_required(view):
