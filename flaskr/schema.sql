@@ -7,13 +7,14 @@ DROP TABLE IF EXISTS parent_child;
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
-  firstName TEXT NOT NULL,
-  lastName TEXT NOT NULL,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
   password TEXT NOT NULL,
   birthday DATE NOT NULL,
   gender TEXT NOT NULL,
   allergies TEXT,
   diet TEXT,
+  branch TEXT,
   otherInformation TEXT
 );
 
@@ -21,12 +22,11 @@ CREATE TABLE user (
 CREATE TABLE address (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL,
-  houseNumber TEXT NOT NULL,
+  house_number TEXT NOT NULL,
   street TEXT NOT NULL,
   town TEXT NOT NULL,
   country TEXT NOT NULL,
   zip INTEGER NOT NULL,
-  branch TEXT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
