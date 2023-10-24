@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% set active_page = "auth/login" %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block content%}
+<section class="p-5">
+    <div class="container">
+        <form method="POST" action="{{ url_for('auth.login') }}" class="row needs-validation justify-content-center" novalidate>
+            <div class="col-md-3">
+                <div class="row my-3 justify-content-center">
+                    <div class="col-md-12 p-0">
+                        <h3 class="txt-scoutGreen">Aloggen</h3>
+                    </div>
+                </div>
+                <div class="row my-3 p-3 border bg-light">
+                    <!-- Virnumm -->
+                    <div class="col-md-12 mb-3">
+                        <label for="username" class="form-label">Usernumm</label>
+                        <input type="text" class="form-control" name="username" id="username" required>
+                    </div>
+                    <!-- Numm -->
+                    <div class="col-md-12 mb-3">
+                        <label for="password" class="form-label">Passwuert</label>
+                        <input type="password" class="form-control" name="password" id="password" required>
+                    </div>
+                    <div class="col-md-12 mb-1">
+                        <button class="btn bg-scoutYellow">
+                            Aloggen
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Javascript for validation -->
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields, https://getbootstrap.com/docs/5.0/forms/validation/
+    (function () {
+      'use strict'
+    
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.querySelectorAll('.needs-validation')
+    
+      // Loop over them and prevent submission
+      Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+          form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+              event.preventDefault()
+              event.stopPropagation()
+            }
+    
+            form.classList.add('was-validated')
+          }, false)
+        })
+    })()
+
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+{% endblock %}
