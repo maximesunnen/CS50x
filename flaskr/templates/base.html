@@ -1,4 +1,4 @@
-<!-- Jinja variable -->
+<!-- Jinja variable (href:caption)-->
 {% set navigation_bar = [
   ('/' , 'Home'),
   ('/apply' , 'Umellen'),
@@ -66,23 +66,30 @@
                       </a>
                     {% endfor %}
                 </div>
-                {% if g.user %}
-                <div class="navbar-nav">
-                    <a href="#" class="nav-link">{{ g.user["username"] }}</a>
-                    <a href="{{ url_for('auth.logout') }}" class="nav-link"> Logout </a>
+
+                  {% if g.user %}
+                    <div class="navbar-nav ms-auto">
+                        <a href="{{ url_for('auth.account') }}" {% if active_page == "{{url_for('auth.account')}}" %} class="active nav-item nav-link" {% else %} class="nav-item nav-link" {% endif %}>{{ g.user["username"] }}</a>
+                        <a href="{{ url_for('auth.logout') }}" {% if active_page == "{{url_for('auth.logout')}}" %} class="active nav-item nav-link" {% else %} class="nav-item nav-link" {% endif %}> Ausloggen </a>
+                    </div>
+                  {% else %}
+                    <div class="navbar-nav ms-auto">
+                        <a href="{{ url_for('auth.register') }}" {% if active_page == "auth/register" %} class="active nav-item nav-link" {% else %} class="nav-item nav-link" {% endif %}>Registréieren</a>
+                        <a href="{{ url_for('auth.login') }}" {% if active_page == "auth/login" %} class="active nav-item nav-link" {% else %} class="nav-item nav-link" {% endif %}>Aloggen</a>
+                    </div>
+                  {% endif %}
                 </div>
-                {% else %}
-                <div class="navbar-nav ms-auto">
-                    <a href="{{ url_for('auth.register') }}" class="nav-link">Register</a>
-                    <a href="{{ url_for('auth.login') }}" class="nav-link">Login</a>
-                </div>
-                {% endif %}
+
               </div>
             </div>
           </nav>
 
           {% for message in get_flashed_messages() %}
-          <div class="flash text-center {{txt_color}} pt-5 fs-3 border">{{ message }}</div>
+          <div class="row justify-content-center">
+            <div class="col-md-3">
+              <div class="flash text-center {{txt_color}} mt-5 fs-3">{{ message }}</div>
+            </div>
+          </div>
           {% endfor %}
           
           {% block content%} {% endblock %}
