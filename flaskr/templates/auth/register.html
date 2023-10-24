@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set active_page = "auth/register" %}
 
 {% block title%}
     Registréieren
@@ -17,21 +18,21 @@
                 <div class="row my-3 p-3 border bg-light">
                     <!-- Virnumm -->
                     <div class="col-md-6 mb-3">
-                        <label for="firstName" class="form-label">Virnumm</label>
-                        <input type="text" class="form-control" name="firstName" id="firstName" required>
+                        <label for="first_name" class="form-label">Virnumm</label>
+                        <input type="text" class="form-control" name="first_name" id="first_name" required>
                     </div>
                     <!-- Numm -->
                     <div class="col-md-6 mb-3">
-                        <label for="lastName" class="form-label">Numm</label>
-                        <input type="text" class="form-control" name="lastName" id="lastName" required>
+                        <label for="last_name" class="form-label">Numm</label>
+                        <input type="text" class="form-control" name="last_name" id="last_name" required>
                     </div>
 
                     <!-- Usernumm -->
                     <div class="col-md-6 mb-3">
-                        <label for="userName" class="form-label">Usernumm</label>
+                        <label for="username" class="form-label">Usernumm</label>
                         <div class="input-group has-validation">
                             <span class="input-group-text" id="inputGroupPrepend">@</span>
-                            <input type="text" class="form-control" name="username" id="userName" required>
+                            <input type="text" class="form-control" name="username" id="username" required>
                         </div>
                     </div>
 
@@ -54,8 +55,8 @@
                 <div class="row my-3">
                     <!-- Gebuertsdatum -->
                     <div class="col-md-5 mb-3">
-                        <label for="birthDate" class="form-label">Gebuertsdatum (DD/MM/JJ)</label>
-                        <input class="form-control" type="date" name="birthDate" id="birthDate" required>
+                        <label for="birthday" class="form-label">Gebuertsdatum</label>
+                        <input class="form-control" type="date" name="birthday" id="birthday" required>
                     </div>
 
                     <!-- Geschlecht -->
@@ -75,8 +76,8 @@
 
                     <!-- Hausnummer -->
                     <div class="col-md-2 mb-3">
-                        <label for="houseNumber" class="form-label">Nr.</label>
-                        <input type="text" class="form-control" name="houseNumber" id="houseNumber" required>
+                        <label for="house_number" class="form-label">Nr.</label>
+                        <input type="text" class="form-control" name="house_number" id="house_number" required>
                     </div>
 
                     <!-- Strooss -->
