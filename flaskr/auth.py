@@ -55,7 +55,7 @@ def register():
         except db.IntegrityError:
             error = f"User {user_info['username']} gëtt et schon."
             flash (error)
-            return render_template(url_for("auth.register"), txt_color="text-danger")
+            return render_template("auth/register.html", txt_color="text-danger")
             
         try:
             # catch id
@@ -67,7 +67,7 @@ def register():
         except db.IntegrityError:
             error = f"Database integrity error at address table insertion"
             flash(error)
-            return render_template(url_for("auth.register"), txt_color="text-danger")
+            return render_template("auth/register.html", txt_color="text-danger")
         
         # commit db query
         db.commit()
@@ -79,7 +79,7 @@ def register():
     # GET
     return render_template("auth/register.html")
 
-@bp.route("/login", methods = ["GET", "POST"]) # endpoint argument omitted, therefore endpoint defaults to the name of the view function (here login)
+@bp.route("/login", methods = ["GET", "POST"]) # endpoint argument omitted: defaults view function name ('login')
 def login():
     if request.method == "POST":
         username = request.form.get("username")
@@ -137,11 +137,6 @@ def logout():
     session.clear()
     return redirect(url_for("index"))
 
-# Account view
-@bp.route("/account")
-def account():
-    return render_template("auth/account.html")
-
 # Define login decorator
 def login_required(view):
     @functools.wraps(view)
@@ -152,3 +147,10 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
+
+# Account view
+@bp.route("/account")
+@login_required
+def account():
+    return render_template("auth/account.html")
+
