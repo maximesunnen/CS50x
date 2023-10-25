@@ -37,3 +37,50 @@
     text-decoration: none;
     color: black;
 }
+
+
+/* CSS for image radio button in "apply.html"; adapted from https://codepen.io/munsheerek/pen/QmEWwq */
+
+.col img{
+    cursor: pointer;
+    transition: transform 1s;
+    object-fit: cover;
+}
+.col label{
+    overflow: hidden;
+    position: relative;
+}
+.imgbgchk:checked + label>.tick_container{
+    opacity: 1;
+}
+/*         aNIMATION */
+.imgbgchk:checked + label>img{
+    transform: scale(1.25);
+    opacity: 0.3;
+}
+.tick_container {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    cursor: pointer;
+    text-align: center;
+}
+.tick {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    padding: 6px 12px;
+    height: 40px;
+    width: 40px;
+    border-radius: 100%;
+}
+
+/* Switches background color */
+.form-switch .form-check-input:checked {
+    background-color: #009c9b;
+    border-color: #009c9b;
+}
