@@ -9,8 +9,8 @@
 <!-- Info section -->
 <section class="pt-5">
     <div class="container">
-        <div class="row">
-            <div class="col-md-12 p-0">
+        <div class="row justify-content-center">
+            <div class="col-md-6 p-0">
                 <h2 class="txt-scoutGreen">Informatiounen</h2>
                 <ul>
                     <li>Test</li>
@@ -26,137 +26,114 @@
 
     <div class="container">
         <!-- Coordonnéeën vum Kand -->
-        <div class="row">
-            <div class="col-md-12 p-0">
-                <h2 class="txt-scoutGreen">Coordonnéeën vum Kand</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-6 p-0">
+                <h2 class="txt-scoutGreen">Meng Coordonnéeën</h2>
             </div>
         </div>  
 
-        <form class="row needs-validation" novalidate>
-            <div class="col-md-12">
-                <div class="row mb-2">
+        <form class="row needs-validation justify-content-center" novalidate>
+            <div class="col-md-6">
+                <div class="row mb-3">
                     <!-- Numm -->
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="validationCustom01" class="form-label">Numm</label>
-                        <input type="text" class="form-control" id="validationCustom01" required>
+                        <input type="text" class="form-control" id="validationCustom01" value="{{ user_info['first_name'] }}" readonly>
                     </div>
 
                     <!-- Virnumm -->
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="validationCustom02" class="form-label">Virnumm</label>
-                        <input type="text" class="form-control" id="validationCustom02" required>
-                    </div>
-
-                    <!-- Pseudonym -->
-                    <div class="col-md-4">
-                        <label for="validationCustomUsername" class="form-label">Pseudonym</label>
-                        <div class="input-group has-validation">
-                            <span class="input-group-text" id="inputGroupPrepend">@</span>
-                            <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
-                        </div>
+                        <input type="text" class="form-control" id="validationCustom02" value="{{ user_info['last_name'] }}" readonly>
                     </div>
                 </div>
 
-                <div class="row mb-2">
+                <div class="row mb-3">
                     <!-- Gebuertsdatum -->
-                    <div class="col-md-4">
-                        <label for="validationCustomDate" class="form-label">Gebuertsdatum (DD/MM/JJ)</label>
+                    <div class="col-md-6">
+                        <label for="validationCustomDate" class="form-label">Gebuertsdatum</label>
                         <button type="button" class="btn p-0 m-0" data-bs-toggle="tooltip" data-bs-placement="top" data-html="true" title="Ärt Kand muss virum 15. September 2017 gebuer sin!">
                             <i class="fas fa-info-circle"></i>
                         </button>
-                        <input class="form-control" type="date" id="validationCustomDate" required>
-                    </div>
-    
-                    <!-- Geschlecht -->
-                    <div class="col-md-4">
-                        <label for="genderGroup" class="form-label">Geschlecht</label>
-    
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="RadioGender" id="RadioGender2" checked>
-                            <label class="form-check-label" for="RadioGender2">
-                            Weiblech
-                            </label>
-                        </div>
-    
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="RadioGender" id="RadioGender1">
-                            <label class="form-check-label" for="RadioGener1">
-                            Männlech
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <!-- Nationalitéit -->
-                    <div class="col-md-4">
-                        <label for="validationCustom03" class="form-label">Nationalitéit</label>
-                        <select class="form-select bfh-countries" data-country="LU" data-flags="true"></select>
+                        <input class="form-control" type="date" id="validationCustomDate" value="{{ user_info['birthday'] }}" readonly>
                     </div>
                 </div>
 
-                <div class="row d-flex justify-content-between mb-2">
+                <div class="row d-flex mb-3">
                     <!-- Hausnummer -->
-                    <div class="col-md-1 me-3">
-                        <label for="houseNumber" class="form-label">Hausnummer</label>
-                        <input type="text" class="form-control" id="houseNumber" required>
+                    <div class="col-md-2">
+                        <label for="houseNumber" class="form-label">Nr</label>
+                        <input type="text" class="form-control" id="houseNumber" value="{{ user_info['house_number'] }}" readonly>
                     </div>
     
                     <!-- Strooss -->
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <label for="street" class="form-label">Strooss</label>
-                        <input type="text" class="form-control" id="street" required>
+                        <input type="text" class="form-control" id="street" value="{{ user_info['street'] }}" readonly>
                     </div>
     
                     <!-- Uertschaft -->
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <label for="validationCustom03" class="form-label">Uertschaft</label>
-                        <input type="text" class="form-control" id="validationCustom03" required>
+                        <input type="text" class="form-control" id="validationCustom03" value="{{ user_info['town'] }}" readonly>
                     </div>
+                </div>
     
+                <div class="row d-flex justify-content-between mb-4">
                     <!-- Land -->
-                    <div class="col-md-2">
+                    <div class="col-md-6">
                         <label for="country" class="form-label">Land</label>
-                        <select class="form-select bfh-countries" data-available="LU,DE,BE,FR" data-country="LU" id="country"></select>
+                        <select class="form-select bfh-countries" data-available="LU,DE,BE,FR" data-country="LU" id="country" value="{{ user_info['country'] }}" disabled>
+
+                        </select>
                     </div>
     
                     <!-- Postleitzuel -->
-                    <div class="col-md-1">
+                    <div class="col-md-4">
                         <label for="validationCustom05" class="form-label">Postleitzuel</label>
-                        <input type="number" class="form-control" id="validationCustom05" required>
-                    </div>
-                </div>
-
-                <div class="row mb-4">
-                    <!-- Branche -->
-                    <div class="col-md-3">
-                        <label for="validationCustom04" class="form-label">Branche</label>
-                        <select class="form-select" id="validationCustom04" required>
-                            <option selected disabled value="">Wielen...</option>
-                            <option>Wëllefcher</option>
-                            <option>Explorer</option>
-                            <option>Pio</option>
-                            <option>Rover</option>
-                        </select>
+                        <input type="number" class="form-control" id="validationCustom05" value="{{ user_info['zip'] }}" readonly>
                     </div>
                 </div>
 
                 <!-- Allergien, Régime, Infos -->
-                <div class="row mb-5">
+                <div class="row mb-4">
                     <div class="col-md-12 mb-2">
-                        <label for="allergies" class="form-label">Mäi Kand huet <strong>Allergien</strong> op...</label>
+                        <label for="allergies" class="form-label">Ech hun <strong>Allergien</strong> op...</label>
                         <input type="text" class="form-control" id="allergies">
                     </div>
     
                     <div class="col-md-12 mb-2">
-                        <label for="diet" class="form-label">Mäi Kand huet e <strong>speziellen</strong> Régime (z.B vegetaresch, vegan)...</label>
+                        <label for="diet" class="form-label">Ech hun e <strong>speziellen</strong> Régime (z.B vegetaresch, vegan)...</label>
                         <input type="text" class="form-control" id="diet">
                     </div>
-    
-                    <div class="col-md-12 mb-2">
-                        <label for="otherInformation" class="form-label">Aner Matdeelungen iwwert Ärt Kand...</label>
+                    
+                    <div class="col-md-12 mb-4">
+                        <label for="otherInformation" class="form-label">Aner Matdeelungen iwwert mech...</label>
                         <textarea class="form-control" id="otherInformation"></textarea>
                     </div>
                 </div>
 
+                <!-- Branche -->
+                <div class="row">
+                    <div class="col-md-12 p-0">
+                        <h2 class="txt-scoutGreen">Fir wéieng Branch wëlls du dech umellen?</h2>
+                    </div>
+                </div>  
+                <!-- Image radio buttons: code adapted from https://codepen.io/munsheerek/pen/QmEWwq; see style.css too -->
+                <div class="row my-4 justify-content-around mb-4">
+                    {% for branch in branch_images %}
+                            <div class='col col-md-2 text-center'>
+                            <input type="radio" name="imgbackground" id="{{ branch }}" class="d-none imgbgchk" value="">
+                              <label for="{{ branch }}">
+                                <img src="{{ branch_images[branch]}}" width="100">
+                                <div class="tick_container">
+                                  <div class="tick"><i class="fa fa-check"></i></div>
+                                </div>
+                                </label>
+                            </div>
+                    {% endfor %}
+                </div>
+                
                 <!-- Coordonnéeën Elteren -->
                 <div class="row">
                     <div class="col-md-12 p-0">
@@ -165,8 +142,8 @@
                 </div>   
 
                 <!-- Elteren-1 -->
-                <div class="row d-flex justify-content-between mb-5">
-                    <div class="col-md-5 rounded bg-light">
+                <div class="row d-flex justify-content-between mb-4">
+                    <div class="col-md-12 rounded bg-light mb-4">
                         <h4 class="mb-3">Elteren 1</h4>
                         <div class="row d-flex justify-content-around">
                             <!-- Numm -->
@@ -190,7 +167,7 @@
     
                         <div class="row d-flex justify-content-start">
                             <!-- Email -->
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <label for="emailParent1" class="form-label">Email</label>
                                 <input type="text" class="form-control" id="emailParent1" required>
                             </div>
@@ -198,7 +175,7 @@
                     </div>
     
                     <!-- Elteren 2 -->
-                    <div class="col-md-5 rounded bg-light">
+                    <div class="col-md-12 rounded bg-light">
                         <h4 class="mb-3">Elteren 2</h4>
                         <div class="row d-flex justify-content-around">
                             <!-- Numm -->
@@ -222,7 +199,7 @@
     
                         <div class="row d-flex justify-content-start">
                             <!-- Email -->
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <label for="emailParent1" class="form-label">Email</label>
                                 <input type="text" class="form-control" id="emailParent1" required>
                             </div>
@@ -239,25 +216,25 @@
 
                 <div class="row pb-2 bg-light">
                     <!-- Numm -->
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="lastNameEmergency" class="form-label">Numm</label>
                         <input type="text" class="form-control" id="lastNameEmergency" required>
                     </div>
                     
                     <!-- Virnumm -->
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="firstNameEmergency" class="form-label">Virnumm</label>
                         <input type="text" class="form-control" id="firstNameEmergency" required>
                     </div>
                     
                     <!-- Telefonsnummer -->
-                    <div class="col-md-3">
+                    <div class="col-md-4 mb-2">
                         <label for="numberEmergency" class="form-label">Telefonsnummer</label>
                         <input type="text" class="form-control" id="numberEmergency" required>
                     </div>
                     
                     <!-- Handynummer -->
-                    <div class="col-md-3">
+                    <div class="col-md-4 ms-auto">
                         <label for="phoneEmergency" class="form-label">Handynummer</label>
                         <input type="text" class="form-control" id="phoneEmergency" required>
                     </div>
@@ -265,65 +242,50 @@
 
                 <div class="row d-flex justify-content-between mb-5 bg-light">
                     <!-- Hausnummer -->
-                    <div class="col-md-1">
-                        <label for="houseNumberEmergency" class="form-label">Hausnummer</label>
+                    <div class="col-md-2 mb-2">
+                        <label for="houseNumberEmergency" class="form-label">Nr</label>
                         <input type="number" class="form-control" id="houseNumberEmergency" required>
                     </div>
     
                     <!-- Strooss -->
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <label for="streetEmergency" class="form-label">Strooss</label>
                         <input type="text" class="form-control" id="streetEmergency" required>
                     </div>
     
                     <!-- Uertschaft -->
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <label for="townEmergency" class="form-label">Uertschaft</label>
                         <input type="text" class="form-control" id="townEmergency" required>
                     </div>
     
                     <!-- Land -->
-                    <div class="col-md-2">
+                    <div class="col-md-6">
                         <label for="countryEmergency" class="form-label">Land</label>
                         <select class="form-select bfh-countries" data-country="LU" data-flags="true" id="countryEmergency"></select>
                     </div>
     
                     <!-- Postleitzuel -->
-                    <div class="col-md-1">
+                    <div class="col-md-4">
                         <label for="zipEmergency" class="form-label">Postleitzuel</label>
                         <input type="number" class="form-control" id="zipEmergency" required>
                     </div>
                 </div>
 
                 <!-- Froën -->
-                <div class="row bg-scoutYellow rounded mb-3">
+                <div class="row border border-danger bg-light rounded p-2 mb-3">
                     {% for question_id, question_text in questions.items() %}
-                    <div class="col-md-12 ms-1 mb-1 form-check form-switch form-check-reverse">
+                    <div class="col-md-12 ms-1 form-check form-switch form-check-reverse">
                         <input class="form-check-input" type="checkbox" id="question1">
-                        <label style="font-size: 18px" class="form-check-label" for="question{{ question_id }}">{{ question_text }}</label>
+                        <p class="text-justify">{{question_text}}</p>
                     </div>
                     {% endfor %}
-                </div>
-
-                <!-- Checkbox -->
-                <div class="row mb-4">
-                    <div class="col-md-12">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                            <label class="form-check-label" for="invalidCheck">
-                            Ech stëmmen den Konditiounen zou.
-                            </label>
-                            <div class="invalid-feedback">
-                            Dir musst de Konditiounen zoustëmmen.
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Button -->
                 <div class="row mb-5">
                     <div class="col-md-12">
-                        <button class="btn bg-scoutYellow" type="submit">Registréieren</button>
+                        <button class="btn bg-scoutYellow" type="submit">Umellen</button>
                     </div>
                 </div>
             </div>
@@ -362,6 +324,28 @@
 
 <script>
     $('.countrypicker').countrypicker();
+</script>
+
+<script>
+// image gallery
+// init the state from the input
+$(".image-checkbox").each(function () {
+  if ($(this).find('input[type="checkbox"]').first().attr("checked")) {
+    $(this).addClass('image-checkbox-checked');
+  }
+  else {
+    $(this).removeClass('image-checkbox-checked');
+  }
+});
+
+// sync the state to the input
+$(".image-checkbox").on("click", function (e) {
+  $(this).toggleClass('image-checkbox-checked');
+  var $checkbox = $(this).find('input[type="checkbox"]');
+  $checkbox.prop("checked",!$checkbox.prop("checked"))
+
+  e.preventDefault();
+});
 </script>
 
 {% endblock %}
