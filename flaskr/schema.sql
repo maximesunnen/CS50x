@@ -20,7 +20,7 @@ CREATE TABLE user (
 
 -- Table to store the address of the user
 CREATE TABLE address (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  address_id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL,
   house_number TEXT NOT NULL,
   street TEXT NOT NULL,
