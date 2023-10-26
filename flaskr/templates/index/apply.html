@@ -10,10 +10,10 @@
 <section class="pt-5">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6 p-0">
-                <h2 class="txt-scoutGreen">Informatiounen</h2>
+            <div class="col-md-6 p-0 m-0 border border-danger rounded bg-light">
                 <ul>
-                    <li>Test</li>
+                    <li>Wëllefcher mussen <strong>virum</strong> 15. September 2017 gebuer sin.</li>
+                    <li>test</li>
                     <li>test</li>
                 </ul>
             </div>
@@ -25,15 +25,38 @@
 <section class="px-5 pt-5">
 
     <div class="container">
-        <!-- Coordonnéeën vum Kand -->
-        <div class="row justify-content-center">
-            <div class="col-md-6 p-0">
-                <h2 class="txt-scoutGreen">Meng Coordonnéeën</h2>
-            </div>
-        </div>  
-
-        <form class="row needs-validation justify-content-center" novalidate>
+        
+        <form method="POST" class="row needs-validation justify-content-center" action="{{ url_for('index.apply') }}" novalidate>
             <div class="col-md-6">
+                <!-- Branche -->
+                <div class="row mb-3">
+                    <div class="col-md-12 p-0">
+                        <h2 class="txt-scoutGreen">Fir wéieng Branch wëlls du dech umellen?</h2>
+                    </div>
+                </div>  
+                
+                <!-- Image radio buttons: code adapted from https://codepen.io/munsheerek/pen/QmEWwq; see style.css too -->
+                <div class="row my-4 justify-content-center">
+                    {% for branch in branch_images %}
+                    <div class='col col-md-3'>
+                        <input type="radio" name="branch" id="{{ branch }}" class="d-none imgbgchk form-control" value="{{ branch }}" required>
+                        <label class="d-flex justify-content-center form-label" for="{{ branch }}">
+                            <img src="{{ branch_images[branch]}}" width="125px">
+                            <div class="tick_container">
+                                <div class="tick"><i class="fa fa-check"></i></div>
+                            </div>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                        
+                <!-- Coordonnéeën vum Kand -->
+                <div class="row mb-3 justify-content-center">
+                    <div class="col-md-12 p-0">
+                        <h2 class="txt-scoutGreen">Meng Coordonnéeën</h2>
+                    </div>
+                </div>
+
                 <div class="row mb-3">
                     <!-- Numm -->
                     <div class="col-md-6">
@@ -52,7 +75,7 @@
                     <!-- Gebuertsdatum -->
                     <div class="col-md-6">
                         <label for="validationCustomDate" class="form-label">Gebuertsdatum</label>
-                        <button type="button" class="btn p-0 m-0" data-bs-toggle="tooltip" data-bs-placement="top" data-html="true" title="Ärt Kand muss virum 15. September 2017 gebuer sin!">
+                        <button type="button" class="btn p-0 m-0" data-bs-toggle="tooltip" data-bs-placement="top" data-html="true" title="Wëllefcher mussen virum 15. September 2017 gebuer sin!">
                             <i class="fas fa-info-circle"></i>
                         </button>
                         <input class="form-control" type="date" id="validationCustomDate" value="{{ user_info['birthday'] }}" readonly>
@@ -99,39 +122,18 @@
                 <div class="row mb-4">
                     <div class="col-md-12 mb-2">
                         <label for="allergies" class="form-label">Ech hun <strong>Allergien</strong> op...</label>
-                        <input type="text" class="form-control" id="allergies">
+                        <input type="text" class="form-control" name="allergies" id="allergies">
                     </div>
     
                     <div class="col-md-12 mb-2">
                         <label for="diet" class="form-label">Ech hun e <strong>speziellen</strong> Régime (z.B vegetaresch, vegan)...</label>
-                        <input type="text" class="form-control" id="diet">
+                        <input type="text" class="form-control" name="diet" id="diet">
                     </div>
                     
                     <div class="col-md-12 mb-4">
-                        <label for="otherInformation" class="form-label">Aner Matdeelungen iwwert mech...</label>
-                        <textarea class="form-control" id="otherInformation"></textarea>
+                        <label for="other_information" class="form-label">Aner Matdeelungen iwwert mech...</label>
+                        <textarea class="form-control" name="other_information" id="other_information"></textarea>
                     </div>
-                </div>
-
-                <!-- Branche -->
-                <div class="row">
-                    <div class="col-md-12 p-0">
-                        <h2 class="txt-scoutGreen">Fir wéieng Branch wëlls du dech umellen?</h2>
-                    </div>
-                </div>  
-                <!-- Image radio buttons: code adapted from https://codepen.io/munsheerek/pen/QmEWwq; see style.css too -->
-                <div class="row my-4 justify-content-around mb-4">
-                    {% for branch in branch_images %}
-                            <div class='col col-md-2 text-center'>
-                            <input type="radio" name="imgbackground" id="{{ branch }}" class="d-none imgbgchk" value="">
-                              <label for="{{ branch }}">
-                                <img src="{{ branch_images[branch]}}" width="100">
-                                <div class="tick_container">
-                                  <div class="tick"><i class="fa fa-check"></i></div>
-                                </div>
-                                </label>
-                            </div>
-                    {% endfor %}
                 </div>
                 
                 <!-- Coordonnéeën Elteren -->
@@ -148,28 +150,28 @@
                         <div class="row d-flex justify-content-around">
                             <!-- Numm -->
                             <div class="col-md-4">
-                                <label for="lastNameParent1" class="form-label">Numm</label>
-                                <input type="text" class="form-control" id="lastNameParent1" required>
+                                <label for="last_name_p1" class="form-label">Numm</label>
+                                <input type="text" class="form-control" name="last_name_p1" id="last_name_p1" required>
                             </div>
                             
                             <!-- Virnumm -->
                             <div class="col-md-4">
-                                <label for="firstNameParent1" class="form-label">Virnumm</label>
-                                <input type="text" class="form-control" id="firstNameParent1" required>
+                                <label for="first_name_p1" class="form-label">Virnumm</label>
+                                <input type="text" class="form-control" name="first_name_p1" id="first_name_p1" required>
                             </div>
     
                             <!-- Handynummer -->
                             <div class="col-md-4">
-                                <label for="numberParent1" class="form-label">Handynummer</label>
-                                <input type="text" class="form-control" id="numberParent1" required>
+                                <label for="number_p1" class="form-label">Handynummer</label>
+                                <input type="text" class="form-control" name="number_p1" id="number_p1" required>
                             </div>
                         </div>
     
                         <div class="row d-flex justify-content-start">
                             <!-- Email -->
                             <div class="col-md-8">
-                                <label for="emailParent1" class="form-label">Email</label>
-                                <input type="text" class="form-control" id="emailParent1" required>
+                                <label for="email_p1" class="form-label">Email</label>
+                                <input type="text" class="form-control" name="email_p1" id="email_p1" required>
                             </div>
                         </div>
                     </div>
@@ -180,28 +182,28 @@
                         <div class="row d-flex justify-content-around">
                             <!-- Numm -->
                             <div class="col-md-4">
-                                <label for="lastNameParent1" class="form-label">Numm</label>
-                                <input type="text" class="form-control" id="lastNameParent1" required>
+                                <label for="last_name_p2" class="form-label">Numm</label>
+                                <input type="text" class="form-control" name="last_name_p2" id="last_name_p2">
                             </div>
                             
                             <!-- Virnumm -->
                             <div class="col-md-4">
-                                <label for="firstNameParent1" class="form-label">Virnumm</label>
-                                <input type="text" class="form-control" id="firstNameParent1" required>
+                                <label for="first_name_p2" class="form-label">Virnumm</label>
+                                <input type="text" class="form-control" name="first_name_p2" id="first_name_p2">
                             </div>
     
                             <!-- Handynummer -->
                             <div class="col-md-4">
-                                <label for="numberParent1" class="form-label">Handynummer</label>
-                                <input type="text" class="form-control" id="numberParent1" required>
+                                <label for="number_p2" class="form-label">Handynummer</label>
+                                <input type="text" class="form-control" name="number_p2" id="number_p2">
                             </div>
                         </div>
     
                         <div class="row d-flex justify-content-start">
                             <!-- Email -->
                             <div class="col-md-8">
-                                <label for="emailParent1" class="form-label">Email</label>
-                                <input type="text" class="form-control" id="emailParent1" required>
+                                <label for="email_p2" class="form-label">Email</label>
+                                <input type="text" class="form-control" name="email_p2" id="email_p2">
                             </div>
                         </div>
                     </div>
@@ -217,58 +219,58 @@
                 <div class="row pb-2 bg-light">
                     <!-- Numm -->
                     <div class="col-md-4">
-                        <label for="lastNameEmergency" class="form-label">Numm</label>
-                        <input type="text" class="form-control" id="lastNameEmergency" required>
+                        <label for="last_name_e" class="form-label">Numm</label>
+                        <input type="text" class="form-control" name="last_name_e" id="last_name_e" required>
                     </div>
                     
                     <!-- Virnumm -->
                     <div class="col-md-4">
-                        <label for="firstNameEmergency" class="form-label">Virnumm</label>
-                        <input type="text" class="form-control" id="firstNameEmergency" required>
+                        <label for="first_name_e" class="form-label">Virnumm</label>
+                        <input type="text" class="form-control" name="first_name_e" id="first_name_e" required>
                     </div>
                     
                     <!-- Telefonsnummer -->
                     <div class="col-md-4 mb-2">
-                        <label for="numberEmergency" class="form-label">Telefonsnummer</label>
-                        <input type="text" class="form-control" id="numberEmergency" required>
+                        <label for="number_e" class="form-label">Telefonsnummer</label>
+                        <input type="text" class="form-control" name="number_e" id="number_e" required>
                     </div>
                     
                     <!-- Handynummer -->
                     <div class="col-md-4 ms-auto">
-                        <label for="phoneEmergency" class="form-label">Handynummer</label>
-                        <input type="text" class="form-control" id="phoneEmergency" required>
+                        <label for="phone_e" class="form-label">Handynummer</label>
+                        <input type="text" class="form-control" name="phone_e" id="phone_e" required>
                     </div>
                 </div>
 
                 <div class="row d-flex justify-content-between mb-5 bg-light">
                     <!-- Hausnummer -->
                     <div class="col-md-2 mb-2">
-                        <label for="houseNumberEmergency" class="form-label">Nr</label>
-                        <input type="number" class="form-control" id="houseNumberEmergency" required>
+                        <label for="house_number_e" class="form-label">Nr</label>
+                        <input type="number" class="form-control" name="house_number_e" id="house_number_e" required>
                     </div>
     
                     <!-- Strooss -->
                     <div class="col-md-5">
-                        <label for="streetEmergency" class="form-label">Strooss</label>
-                        <input type="text" class="form-control" id="streetEmergency" required>
+                        <label for="street_e" class="form-label">Strooss</label>
+                        <input type="text" class="form-control" name="street_e" id="street_e" required>
                     </div>
     
                     <!-- Uertschaft -->
                     <div class="col-md-5">
-                        <label for="townEmergency" class="form-label">Uertschaft</label>
-                        <input type="text" class="form-control" id="townEmergency" required>
+                        <label for="town_e" class="form-label">Uertschaft</label>
+                        <input type="text" class="form-control" name="town_e" id="town_e" required>
                     </div>
     
                     <!-- Land -->
                     <div class="col-md-6">
-                        <label for="countryEmergency" class="form-label">Land</label>
-                        <select class="form-select bfh-countries" data-country="LU" data-flags="true" id="countryEmergency"></select>
+                        <label for="country_e" class="form-label">Land</label>
+                        <select class="form-select bfh-countries" data-country="LU" data-flags="true" name="country_e" id="country_e"></select>
                     </div>
     
                     <!-- Postleitzuel -->
                     <div class="col-md-4">
-                        <label for="zipEmergency" class="form-label">Postleitzuel</label>
-                        <input type="number" class="form-control" id="zipEmergency" required>
+                        <label for="zip_e" class="form-label">Postleitzuel</label>
+                        <input type="number" class="form-control" name="zip_e" id="zip_e" required>
                     </div>
                 </div>
 
