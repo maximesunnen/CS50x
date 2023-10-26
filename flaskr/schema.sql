@@ -34,9 +34,9 @@ CREATE TABLE address (
 CREATE TABLE parent (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL,
-  firstName TEXT NOT NULL,
-  lastName TEXT NOT NULL,
-  mobilePhone TEXT NOT NULL,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  phone_number TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
