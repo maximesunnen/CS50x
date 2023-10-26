@@ -12,7 +12,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6 p-0 m-0 border border-danger rounded bg-light">
                 <ul>
-                    <li>Wëllefcher mussen <strong>virum</strong> 15. September 2017 gebuer sin.</li>
+                    <li>Wëllefcher musse <strong>virum</strong> 15. September 2017 gebuer sin.</li>
                     <li>test</li>
                     <li>test</li>
                 </ul>
@@ -26,7 +26,7 @@
 
     <div class="container">
         
-        <form method="POST" class="row needs-validation justify-content-center" action="{{ url_for('index.apply') }}" novalidate>
+        <form method="POST" class="row needs-validation justify-content-center" action="{{ url_for('index.apply') }}" id="form" novalidate>
             <div class="col-md-6">
                 <!-- Branche -->
                 <div class="row mb-3">
@@ -39,7 +39,7 @@
                 <div class="row my-4 justify-content-center">
                     {% for branch in branch_images %}
                     <div class='col col-md-3'>
-                        <input type="radio" name="branch" id="{{ branch }}" class="d-none imgbgchk form-control" value="{{ branch }}" required>
+                        <input type="radio" name="branch" id="{{ branch }}" class="d-none imgbgchk form-control" value="{{ branch }}" onclick="showGroup('{{ branch }}')" required>
                         <label class="d-flex justify-content-center form-label" for="{{ branch }}">
                             <img src="{{ branch_images[branch]}}" width="125px">
                             <div class="tick_container">
@@ -49,245 +49,252 @@
                     </div>
                     {% endfor %}
                 </div>
-                        
-                <!-- Coordonnéeën vum Kand -->
-                <div class="row mb-3 justify-content-center">
-                    <div class="col-md-12 p-0">
-                        <h2 class="txt-scoutGreen">Meng Coordonnéeën</h2>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <!-- Numm -->
-                    <div class="col-md-6">
-                        <label for="validationCustom01" class="form-label">Numm</label>
-                        <input type="text" class="form-control" id="validationCustom01" value="{{ user_info['first_name'] }}" readonly>
-                    </div>
-
-                    <!-- Virnumm -->
-                    <div class="col-md-6">
-                        <label for="validationCustom02" class="form-label">Virnumm</label>
-                        <input type="text" class="form-control" id="validationCustom02" value="{{ user_info['last_name'] }}" readonly>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <!-- Gebuertsdatum -->
-                    <div class="col-md-6">
-                        <label for="validationCustomDate" class="form-label">Gebuertsdatum</label>
-                        <button type="button" class="btn p-0 m-0" data-bs-toggle="tooltip" data-bs-placement="top" data-html="true" title="Wëllefcher mussen virum 15. September 2017 gebuer sin!">
-                            <i class="fas fa-info-circle"></i>
-                        </button>
-                        <input class="form-control" type="date" id="validationCustomDate" value="{{ user_info['birthday'] }}" readonly>
-                    </div>
-                </div>
-
-                <div class="row d-flex mb-3">
-                    <!-- Hausnummer -->
-                    <div class="col-md-2">
-                        <label for="houseNumber" class="form-label">Nr</label>
-                        <input type="text" class="form-control" id="houseNumber" value="{{ user_info['house_number'] }}" readonly>
-                    </div>
-    
-                    <!-- Strooss -->
-                    <div class="col-md-5">
-                        <label for="street" class="form-label">Strooss</label>
-                        <input type="text" class="form-control" id="street" value="{{ user_info['street'] }}" readonly>
-                    </div>
-    
-                    <!-- Uertschaft -->
-                    <div class="col-md-5">
-                        <label for="validationCustom03" class="form-label">Uertschaft</label>
-                        <input type="text" class="form-control" id="validationCustom03" value="{{ user_info['town'] }}" readonly>
-                    </div>
-                </div>
-    
-                <div class="row d-flex justify-content-between mb-4">
-                    <!-- Land -->
-                    <div class="col-md-6">
-                        <label for="country" class="form-label">Land</label>
-                        <select class="form-select bfh-countries" data-available="LU,DE,BE,FR" data-country="LU" id="country" value="{{ user_info['country'] }}" disabled>
-
-                        </select>
-                    </div>
-    
-                    <!-- Postleitzuel -->
-                    <div class="col-md-4">
-                        <label for="validationCustom05" class="form-label">Postleitzuel</label>
-                        <input type="number" class="form-control" id="validationCustom05" value="{{ user_info['zip'] }}" readonly>
-                    </div>
-                </div>
-
-                <!-- Allergien, Régime, Infos -->
-                <div class="row mb-4">
-                    <div class="col-md-12 mb-2">
-                        <label for="allergies" class="form-label">Ech hun <strong>Allergien</strong> op...</label>
-                        <input type="text" class="form-control" name="allergies" id="allergies">
-                    </div>
-    
-                    <div class="col-md-12 mb-2">
-                        <label for="diet" class="form-label">Ech hun e <strong>speziellen</strong> Régime (z.B vegetaresch, vegan)...</label>
-                        <input type="text" class="form-control" name="diet" id="diet">
-                    </div>
-                    
-                    <div class="col-md-12 mb-4">
-                        <label for="other_information" class="form-label">Aner Matdeelungen iwwert mech...</label>
-                        <textarea class="form-control" name="other_information" id="other_information"></textarea>
-                    </div>
-                </div>
                 
-                <!-- Coordonnéeën Elteren -->
-                <div class="row">
-                    <div class="col-md-12 p-0">
-                        <h2 class="txt-scoutGreen">Coordonnéeën vun den Elteren</h2>
+                <div class="branch wellefcher explorer pio rover">
+                    <!-- Coordonnéeën vum Kand -->
+                    <div class="row mb-3 justify-content-center">
+                        <div class="col-md-12 p-0">
+                            <h2 class="txt-scoutGreen">Meng Coordonnéeën</h2>
+                        </div>
                     </div>
-                </div>   
 
-                <!-- Elteren-1 -->
-                <div class="row d-flex justify-content-between mb-4">
-                    <div class="col-md-12 rounded bg-light mb-4">
-                        <h4 class="mb-3">Elteren 1</h4>
-                        <div class="row d-flex justify-content-around">
-                            <!-- Numm -->
-                            <div class="col-md-4">
-                                <label for="last_name_p1" class="form-label">Numm</label>
-                                <input type="text" class="form-control" name="last_name_p1" id="last_name_p1" required>
-                            </div>
-                            
-                            <!-- Virnumm -->
-                            <div class="col-md-4">
-                                <label for="first_name_p1" class="form-label">Virnumm</label>
-                                <input type="text" class="form-control" name="first_name_p1" id="first_name_p1" required>
-                            </div>
-    
-                            <!-- Handynummer -->
-                            <div class="col-md-4">
-                                <label for="number_p1" class="form-label">Handynummer</label>
-                                <input type="text" class="form-control" name="number_p1" id="number_p1" required>
-                            </div>
+                    <div class="row mb-3">
+                        <!-- Numm -->
+                        <div class="col-md-6">
+                            <label for="validationCustom01" class="form-label">Numm</label>
+                            <input type="text" class="form-control" id="validationCustom01" value="{{ user_info['first_name'] }}" readonly>
                         </div>
-    
-                        <div class="row d-flex justify-content-start">
-                            <!-- Email -->
-                            <div class="col-md-8">
-                                <label for="email_p1" class="form-label">Email</label>
-                                <input type="text" class="form-control" name="email_p1" id="email_p1" required>
-                            </div>
+
+                        <!-- Virnumm -->
+                        <div class="col-md-6">
+                            <label for="validationCustom02" class="form-label">Virnumm</label>
+                            <input type="text" class="form-control" id="validationCustom02" value="{{ user_info['last_name'] }}" readonly>
                         </div>
                     </div>
-    
-                    <!-- Elteren 2 -->
-                    <div class="col-md-12 rounded bg-light">
-                        <h4 class="mb-3">Elteren 2</h4>
-                        <div class="row d-flex justify-content-around">
-                            <!-- Numm -->
-                            <div class="col-md-4">
-                                <label for="last_name_p2" class="form-label">Numm</label>
-                                <input type="text" class="form-control" name="last_name_p2" id="last_name_p2">
-                            </div>
-                            
-                            <!-- Virnumm -->
-                            <div class="col-md-4">
-                                <label for="first_name_p2" class="form-label">Virnumm</label>
-                                <input type="text" class="form-control" name="first_name_p2" id="first_name_p2">
-                            </div>
-    
-                            <!-- Handynummer -->
-                            <div class="col-md-4">
-                                <label for="number_p2" class="form-label">Handynummer</label>
-                                <input type="text" class="form-control" name="number_p2" id="number_p2">
-                            </div>
+
+                    <div class="row mb-3">
+                        <!-- Gebuertsdatum -->
+                        <div class="col-md-6">
+                            <label for="validationCustomDate" class="form-label">Gebuertsdatum</label>
+                            <button type="button" class="btn p-0 m-0" data-bs-toggle="tooltip" data-bs-placement="top" data-html="true" title="Wëllefcher musse virum 15. September 2017 gebuer sin!">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                            <input class="form-control" type="date" id="validationCustomDate" value="{{ user_info['birthday'] }}" readonly>
                         </div>
-    
-                        <div class="row d-flex justify-content-start">
-                            <!-- Email -->
-                            <div class="col-md-8">
-                                <label for="email_p2" class="form-label">Email</label>
-                                <input type="text" class="form-control" name="email_p2" id="email_p2">
-                            </div>
+                    </div>
+
+                    <div class="row d-flex mb-3">
+                        <!-- Hausnummer -->
+                        <div class="col-md-2">
+                            <label for="houseNumber" class="form-label">Nr</label>
+                            <input type="text" class="form-control" id="houseNumber" value="{{ user_info['house_number'] }}" readonly>
+                        </div>
+        
+                        <!-- Strooss -->
+                        <div class="col-md-5">
+                            <label for="street" class="form-label">Strooss</label>
+                            <input type="text" class="form-control" id="street" value="{{ user_info['street'] }}" readonly>
+                        </div>
+        
+                        <!-- Uertschaft -->
+                        <div class="col-md-5">
+                            <label for="validationCustom03" class="form-label">Uertschaft</label>
+                            <input type="text" class="form-control" id="validationCustom03" value="{{ user_info['town'] }}" readonly>
+                        </div>
+                    </div>
+        
+                    <div class="row d-flex justify-content-between mb-4">
+                        <!-- Land -->
+                        <div class="col-md-6">
+                            <label for="country" class="form-label">Land</label>
+                            <select class="form-select bfh-countries" data-available="LU,DE,BE,FR" data-country="LU" id="country" value="{{ user_info['country'] }}" disabled>
+
+                            </select>
+                        </div>
+        
+                        <!-- Postleitzuel -->
+                        <div class="col-md-4">
+                            <label for="validationCustom05" class="form-label">Postleitzuel</label>
+                            <input type="number" class="form-control" id="validationCustom05" value="{{ user_info['zip'] }}" readonly>
                         </div>
                     </div>
                 </div>
 
-                <!-- Coordonnéeën Urgence -->
-                <div class="row">
-                    <div class="col-md-12 p-0">
-                        <h2 class="txt-scoutGreen">Persoun déi soll kontaktéiert gin, wann d'Elteren nët ze areechen sin</h2>
-                    </div>
-                </div>   
-
-                <div class="row pb-2 bg-light">
-                    <!-- Numm -->
-                    <div class="col-md-4">
-                        <label for="last_name_e" class="form-label">Numm</label>
-                        <input type="text" class="form-control" name="last_name_e" id="last_name_e" required>
+                <div class="branch wellefcher explorer pio">
+                    <!-- Allergien, Régime, Infos -->
+                    <div class="row mb-4">
+                        <div class="col-md-12 mb-2">
+                            <label for="allergies" class="form-label">Ech hun <strong>Allergien</strong> op...</label>
+                            <input type="text" class="form-control" name="allergies" id="allergies">
+                        </div>
+        
+                        <div class="col-md-12 mb-2">
+                            <label for="diet" class="form-label">Ech hun e <strong>speziellen</strong> Régime (z.B vegetaresch, vegan)...</label>
+                            <input type="text" class="form-control" name="diet" id="diet">
+                        </div>
+                        
+                        <div class="col-md-12 mb-4">
+                            <label for="other_information" class="form-label">Aner Matdeelungen iwwert mech...</label>
+                            <textarea class="form-control" name="other_information" id="other_information"></textarea>
+                        </div>
                     </div>
                     
-                    <!-- Virnumm -->
-                    <div class="col-md-4">
-                        <label for="first_name_e" class="form-label">Virnumm</label>
-                        <input type="text" class="form-control" name="first_name_e" id="first_name_e" required>
+                    <!-- Coordonnéeën Elteren -->
+                    <div class="row">
+                        <div class="col-md-12 p-0">
+                            <h2 class="txt-scoutGreen">Coordonnéeën vun den Elteren</h2>
+                        </div>
+                    </div>   
+
+                    <!-- Elteren-1 -->
+                    <div class="row d-flex justify-content-between mb-4">
+                        <div class="col-md-12 rounded bg-light mb-4">
+                            <h4 class="mb-3">Elteren 1</h4>
+                            <div class="row d-flex justify-content-around">
+                                <!-- Numm -->
+                                <div class="col-md-4">
+                                    <label for="last_name_p1" class="form-label">Numm</label>
+                                    <input type="text" class="form-control" name="last_name_p1" id="last_name_p1" required>
+                                </div>
+                                
+                                <!-- Virnumm -->
+                                <div class="col-md-4">
+                                    <label for="first_name_p1" class="form-label">Virnumm</label>
+                                    <input type="text" class="form-control" name="first_name_p1" id="first_name_p1" required>
+                                </div>
+        
+                                <!-- Handynummer -->
+                                <div class="col-md-4">
+                                    <label for="number_p1" class="form-label">Handynummer</label>
+                                    <input type="text" class="form-control" name="number_p1" id="number_p1" required>
+                                </div>
+                            </div>
+        
+                            <div class="row d-flex justify-content-start">
+                                <!-- Email -->
+                                <div class="col-md-8">
+                                    <label for="email_p1" class="form-label">Email</label>
+                                    <input type="text" class="form-control" name="email_p1" id="email_p1" required>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Elteren 2 -->
+                        <div class="col-md-12 rounded bg-light">
+                            <h4 class="mb-3">Elteren 2</h4>
+                            <div class="row d-flex justify-content-around">
+                                <!-- Numm -->
+                                <div class="col-md-4">
+                                    <label for="last_name_p2" class="form-label">Numm</label>
+                                    <input type="text" class="form-control" name="last_name_p2" id="last_name_p2">
+                                </div>
+                                
+                                <!-- Virnumm -->
+                                <div class="col-md-4">
+                                    <label for="first_name_p2" class="form-label">Virnumm</label>
+                                    <input type="text" class="form-control" name="first_name_p2" id="first_name_p2">
+                                </div>
+        
+                                <!-- Handynummer -->
+                                <div class="col-md-4">
+                                    <label for="number_p2" class="form-label">Handynummer</label>
+                                    <input type="text" class="form-control" name="number_p2" id="number_p2">
+                                </div>
+                            </div>
+        
+                            <div class="row d-flex justify-content-start">
+                                <!-- Email -->
+                                <div class="col-md-8">
+                                    <label for="email_p2" class="form-label">Email</label>
+                                    <input type="text" class="form-control" name="email_p2" id="email_p2">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <!-- Telefonsnummer -->
-                    <div class="col-md-4 mb-2">
-                        <label for="number_e" class="form-label">Telefonsnummer</label>
-                        <input type="text" class="form-control" name="number_e" id="number_e" required>
+
+                    <!-- Coordonnéeën Urgence -->
+                    <div class="row">
+                        <div class="col-md-12 p-0">
+                            <h2 class="txt-scoutGreen">Persoun déi soll kontaktéiert gin, wann d'Elteren nët ze areechen sin</h2>
+                        </div>
+                    </div>   
+
+                    <div class="row pb-2 bg-light">
+                        <!-- Numm -->
+                        <div class="col-md-4">
+                            <label for="last_name_e" class="form-label">Numm</label>
+                            <input type="text" class="form-control" name="last_name_e" id="last_name_e" required>
+                        </div>
+                        
+                        <!-- Virnumm -->
+                        <div class="col-md-4">
+                            <label for="first_name_e" class="form-label">Virnumm</label>
+                            <input type="text" class="form-control" name="first_name_e" id="first_name_e" required>
+                        </div>
+                        
+                        <!-- Telefonsnummer -->
+                        <div class="col-md-4 mb-2">
+                            <label for="number_e" class="form-label">Telefonsnummer</label>
+                            <input type="text" class="form-control" name="number_e" id="number_e" required>
+                        </div>
+                        
+                        <!-- Handynummer -->
+                        <div class="col-md-4 ms-auto">
+                            <label for="phone_e" class="form-label">Handynummer</label>
+                            <input type="text" class="form-control" name="phone_e" id="phone_e" required>
+                        </div>
                     </div>
-                    
-                    <!-- Handynummer -->
-                    <div class="col-md-4 ms-auto">
-                        <label for="phone_e" class="form-label">Handynummer</label>
-                        <input type="text" class="form-control" name="phone_e" id="phone_e" required>
+
+                    <div class="row d-flex justify-content-between mb-5 bg-light">
+                        <!-- Hausnummer -->
+                        <div class="col-md-2 mb-2">
+                            <label for="house_number_e" class="form-label">Nr</label>
+                            <input type="number" class="form-control" name="house_number_e" id="house_number_e" required>
+                        </div>
+        
+                        <!-- Strooss -->
+                        <div class="col-md-5">
+                            <label for="street_e" class="form-label">Strooss</label>
+                            <input type="text" class="form-control" name="street_e" id="street_e" required>
+                        </div>
+        
+                        <!-- Uertschaft -->
+                        <div class="col-md-5">
+                            <label for="town_e" class="form-label">Uertschaft</label>
+                            <input type="text" class="form-control" name="town_e" id="town_e" required>
+                        </div>
+        
+                        <!-- Land -->
+                        <div class="col-md-6">
+                            <label for="country_e" class="form-label">Land</label>
+                            <select class="form-select bfh-countries" data-country="LU" data-flags="true" name="country_e" id="country_e"></select>
+                        </div>
+        
+                        <!-- Postleitzuel -->
+                        <div class="col-md-4">
+                            <label for="zip_e" class="form-label">Postleitzuel</label>
+                            <input type="number" class="form-control" name="zip_e" id="zip_e" required>
+                        </div>
+                    </div>
+
+                    <!-- Froën -->
+                    <div class="row border border-danger bg-light rounded p-2 mb-3">
+                        {% for question_id, question_text in questions.items() %}
+                        <div class="col-md-12 ms-1 form-check form-switch form-check-reverse">
+                            <input class="form-check-input" type="checkbox" id="question1">
+                            <p class="text-justify">{{question_text}}</p>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
 
-                <div class="row d-flex justify-content-between mb-5 bg-light">
-                    <!-- Hausnummer -->
-                    <div class="col-md-2 mb-2">
-                        <label for="house_number_e" class="form-label">Nr</label>
-                        <input type="number" class="form-control" name="house_number_e" id="house_number_e" required>
-                    </div>
-    
-                    <!-- Strooss -->
-                    <div class="col-md-5">
-                        <label for="street_e" class="form-label">Strooss</label>
-                        <input type="text" class="form-control" name="street_e" id="street_e" required>
-                    </div>
-    
-                    <!-- Uertschaft -->
-                    <div class="col-md-5">
-                        <label for="town_e" class="form-label">Uertschaft</label>
-                        <input type="text" class="form-control" name="town_e" id="town_e" required>
-                    </div>
-    
-                    <!-- Land -->
-                    <div class="col-md-6">
-                        <label for="country_e" class="form-label">Land</label>
-                        <select class="form-select bfh-countries" data-country="LU" data-flags="true" name="country_e" id="country_e"></select>
-                    </div>
-    
-                    <!-- Postleitzuel -->
-                    <div class="col-md-4">
-                        <label for="zip_e" class="form-label">Postleitzuel</label>
-                        <input type="number" class="form-control" name="zip_e" id="zip_e" required>
-                    </div>
-                </div>
-
-                <!-- Froën -->
-                <div class="row border border-danger bg-light rounded p-2 mb-3">
-                    {% for question_id, question_text in questions.items() %}
-                    <div class="col-md-12 ms-1 form-check form-switch form-check-reverse">
-                        <input class="form-check-input" type="checkbox" id="question1">
-                        <p class="text-justify">{{question_text}}</p>
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <!-- Button -->
-                <div class="row mb-5">
-                    <div class="col-md-12">
-                        <button class="btn bg-scoutYellow" type="submit">Umellen</button>
+                <!-- Branch class to hide the button before user selects a branch -->
+                <div class="branch">
+                    <!-- Button -->
+                    <div class="row mb-5">
+                        <div class="col-md-12">
+                            <button class="btn bg-scoutYellow" type="submit">Umellen</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -348,6 +355,28 @@ $(".image-checkbox").on("click", function (e) {
 
   e.preventDefault();
 });
+</script>
+
+<script>
+    // Hide all 
+    branches = document.querySelectorAll('.branch')
+    for (var i = 0; i < branches.length; i++) {
+            branches[i].style.display = 'none';
+        }
+        
+    function showGroup(groupName) {
+        var branches = document.querySelectorAll('.branch');
+        // Hide all initially
+        for (var i = 0; i < branches.length; i++) {
+            branches[i].style.display = 'none';
+        }
+        
+        // Display selected group form
+        var selectedGroups = document.querySelectorAll('.' + groupName);
+        selectedGroups.forEach(function(group) {
+            group.style.display = 'block';
+        });
+    }
 </script>
 
 {% endblock %}
