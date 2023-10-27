@@ -23,7 +23,7 @@ def index():
     prefixes = ['wellefcher', 'explorer', 'pio', 'rover']
     text_values = ["Wëllefcher", "Explorer", "Pio", "Rover"]
     age_values = ["8 - 11 Joër", "11 - 14 Joër", "14 - 17 Joër", "17 - 23 Joër"]
-    img_values = [url_for('static', filename = i) for i in ["Wellefcher_rgb.jpeg", "AvEx_rgb.png", "CaraPio_rgb.png", "RaRo_rgb.png"]]
+    img_values = [url_for('static', filename = i) for i in ["images/wellefcher.jpeg", "images/avex.png", "images/pio.png", "images/rover.png"]]
 
     branches = {}
 
@@ -83,50 +83,62 @@ def apply():
 
         # Connect to database
         db = get_db()
-        
+    
         try:
             # Update user table with child info
             db.execute("UPDATE user SET branch=?, allergies=?, diet=?, otherInformation=? WHERE id = ?", (*form_info["child_info"].values(), session["user_id"]))
             
-            # Insert parent_1 into parent table
-            db.execute("INSERT INTO parent (user_id, first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?, ?)", (session["user_id"], *form_info["parent_1"].values()))
+            # If parent_1 not already in the database, insert
+            integrity_check = db.execute("SELECT * FROM parent WHERE email = ?", (form_info["parent_1"]["email"],)).fetchone()
             
-            # Insert parent_2 into parent table (form_info["parent_2"] is itself a dict)
-            if form_filled_in(form_info["parent_2"]):
-                db.execute("INSERT INTO parent (user_id, first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?, ?)", (session["user_id"], *form_info["parent_2"].values()))
-                
-                # If parent_2 exists, insert both parents into parent_child table
-                parent_id = db.execute("SELECT id FROM parent WHERE user_id = ?", (session["user_id"],))
-                
-                for id in parent_id:
-                    db.execute("INSERT INTO parent_child (parent_id, child_id) VALUES (?, ?)", (id[0], session["user_id"]))
-            
-            else:
-                # Get parent id
-                parent_id = db.execute("SELECT id FROM parent WHERE user_id = ?", (session["user_id"],))
-                
-                # Insert parent into parent_child table
-                db.execute("INSERT INTO parent_child (parent_id, child_id) VALUES (?, ?)", (parent_id, session["user_id"]))
-
-            # Commit at the end
-            db.commit()
+            if integrity_check is None:
+                db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (*form_info["parent_1"].values(),))
             
         except db.IntegrityError:
-            flash("db.IntegrityError")
+            flash("E Problem ass opgetrueden. Feeler Code 100.")
+            return redirect(url_for("index.apply"))
+        
+        try:
+            # Check if form for parent 2 is filled in
+            if form_filled_in(form_info["parent_2"]):
+                
+                # If parent 2 is not already in the database, insert
+                integrity_check = db.execute("SELECT FROM parent WHERE email = ?", (form_info["parent_2"]["email"],)).fetchone()
+                
+                if integrity_check is None:
+                    db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (*form_info["parent_2"].values(),))
+            
+        except db.IntegrityError:
+            flash("E Problem ass opgetrueden. Feeler Code 101.")
+            return redirect(url_for("index.apply"))
+        
+        try:
+            # Link parent(s) with child
+            parent_id = db.execute("SELECT id FROM parent WHERE email = ? OR email = ?", (form_info["parent_1"]["email"], form_info["parent_2"]["email"]))
+            
+            for id in parent_id:
+                    db.execute("INSERT INTO parent_child (parent_id, child_id) VALUES (?, ?)", (id[0], session["user_id"]))
+                
+        except db.IntegrityError:
+            flash("E Problem ass opgetrueden. Feeler Code 102.")
             return redirect(url_for("index.apply"))
             
-        # If no error, save True to an "applied" variable because applying should only be possible ONCE:
-        applied = True
-            
+        # Update user database and set scout_registration to TRUE
+        db.execute("UPDATE user SET scout_registration = ? WHERE id = ?", ("TRUE", session["user_id"]))
+        
+        # Commit database changes
+        db.commit()
+
+        # Return to home
         return redirect(url_for("index.index"))
     
     # GET REQUEST
     # Image dictionary for Jinja looping
     branch_images = {
-        "wellefcher": url_for('static', filename='Wellefcher_rgb.jpeg'),
-        "explorer": url_for('static', filename='AvEx_rgb.png'),
-        "pio": url_for('static', filename='Carapio_rgb.png'),
-        "rover": url_for('static', filename='RaRo_rgb.png')
+        "wellefcher": url_for('static', filename='images/wellefcher.jpeg'),
+        "explorer": url_for('static', filename='images/avex.png'),
+        "pio": url_for('static', filename='images/pio.png'),
+        "rover": url_for('static', filename='images/rover.png')
     }
     # Connect to database
     db = get_db()
