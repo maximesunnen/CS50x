@@ -37,7 +37,7 @@ def register():
         
         # If passwords not identical, return register.html
         if user_info["password"] != user_info["password_confirm"]:
-            error = "Dir hudd zwee verschidden Passwieder agin."
+            flash("Dir hudd zwee verschidden Passwieder agin.")
             return render_template("auth/register.html")
             
         # Initialize error to None:
@@ -84,7 +84,7 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        
+         
         error = None
         
         if not username:
@@ -92,10 +92,10 @@ def login():
             
         elif not password:
             error = "Passwuert feelt."
-        
+            
         # Connect to database
         db = get_db()
-
+        
         user = db.execute("SELECT * FROM user WHERE username = ?", (username,)).fetchone() 
             # (username,): trailing comma to create single-element tuple
             # fetchone(): selects one row of query
@@ -106,7 +106,7 @@ def login():
         
         elif not check_password_hash(user["password"], password):
             error = "Falscht Passwuert."
-            
+        
         if error == None:
             # Add session
             session.clear()
@@ -125,7 +125,6 @@ def login():
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get("user_id")
-    
     if user_id == None:
         g.user = None
     else:
