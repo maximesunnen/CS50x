@@ -37,5 +37,10 @@ def create_app(test_config=None):
     from . import index
     app.register_blueprint(index.bp)
     app.add_url_rule('/', endpoint='index')
+    
+    # Add simple route for testing
+    @app.route('/test')
+    def test():
+        return 'Hello, World!'
 
     return app
