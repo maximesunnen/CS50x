@@ -15,7 +15,8 @@ CREATE TABLE user (
   allergies TEXT,
   diet TEXT,
   branch TEXT,
-  otherInformation TEXT
+  otherInformation TEXT,
+  scout_registration TEXT DEFAULT 'FALSE'
 );
 
 -- Table to store the address of the user
@@ -33,12 +34,10 @@ CREATE TABLE address (
 -- Table to store information on child's parent
 CREATE TABLE parent (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
   phone_number TEXT NOT NULL,
-  email TEXT NOT NULL UNIQUE,
-  FOREIGN KEY (user_id) REFERENCES user(id)
+  email TEXT NOT NULL UNIQUE
 );
 
 -- Junction table with composite key
