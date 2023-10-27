@@ -39,7 +39,7 @@
         {% block head %} {% endblock %}
 
         <!-- Different title for each page: Jinja placeholder -->
-        <title>Kayler Scouten: {% block title %}{% endblock %}</title>
+        <title>Käler Scouten: {% block title %}{% endblock %}</title>
     </head>
     
     <body>
@@ -49,7 +49,7 @@
             <div class="container">
             <!-- Navbar brand: icon/text in top left corner -->
               <a class="navbar-brand" href="#">
-                <img src="/static/Lëtzebuerger_Guiden_a_Scouten.svg.png" width="30" height="24" class="d-inline-block align-text-top">
+                <img src="/static/images/lgs.png" width="30" height="24" class="d-inline-block align-text-top">
                 Käler Scouten
               </a>
 
@@ -69,8 +69,8 @@
 
                   {% if g.user %}
                     <div class="navbar-nav ms-auto">
-                        <a href="{{ url_for('auth.account') }}" {% if active_page == "{{url_for('auth.account')}}" %} class="active nav-item nav-link" {% else %} class="nav-item nav-link" {% endif %}>{{ g.user["username"] }}</a>
-                        <a href="{{ url_for('auth.logout') }}" {% if active_page == "{{url_for('auth.logout')}}" %} class="active nav-item nav-link" {% else %} class="nav-item nav-link" {% endif %}> Ausloggen </a>
+                        <a href="{{ url_for('auth.account') }}" {% if active_page == "auth/account" %} class="active nav-item nav-link" {% else %} class="nav-item nav-link" {% endif %}>{{ g.user["username"] }}</a>
+                        <a href="{{ url_for('auth.logout') }}" class="nav-item nav-link"> Ausloggen </a>
                     </div>
                   {% else %}
                     <div class="navbar-nav ms-auto">
