@@ -14,7 +14,7 @@
         <div class="row">
 
             <div class="col-md-4 text-center">
-                <img src="static/Lëtzebuerger_Guiden_a_Scouten.svg.png" width="250px" height="250px">
+                <img src="static/images/lgs.png" width="250px" height="250px">
             </div>
 
             <div class="col-md-8 ps-5 d-flex flex-column justify-content-center align-items-center">
@@ -30,53 +30,20 @@
     <div class="container py-5">
         <!-- Row -->
         <div class="row d-flex justify-content-center">
-            <div class="col-md-2">
-                <div class="card border-0">
-                    <a class="black-link" href="/apply">
-                        <div class="card-body text-center">
-                            <img class="card-img-top rounded-circle mb-3 mx-auto card-img" src="/static/Wellefcher_rgb.jpeg">
-                            <h5 class="card-title">Wëllefcher</h5>
-                            <p class="card-text"> 8 - 11 Joër</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
 
-            <div class="col-md-2">
-                <div class="card border-0">
-                    <a class="black-link" href="/apply">
-                        <div class="card-body text-center">
-                            <img class="card-img-top rounded-circle mb-3 card-img" src="/static/AvEx_rgb.png">
-                            <h5 class="card-title">Explorer</h5>
-                            <p class="card-text">11 - 14 Joër</p>
-                        </div>
-                    </a>
+            {% for branch in branches %}
+                <div class="col-md-2">
+                    <div class="card border-0">
+                        <a class="black-link d-flex justify-content-center" href="/apply">
+                            <div class="card-body text-center">
+                                <img class="card-img-top rounded-circle mb-3 card-img" src="{{ branches[branch]['img'] }}">
+                                <h5 class="card-title">{{ branches[branch]['text'] }}</h5>
+                                <p class="card-text"> {{ branches[branch]['age'] }}</p>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </div>
-
-            <div class="col-md-2">
-                <div class="card border-0">
-                    <a class=black-link href="/apply">
-                        <div class="card-body text-center">
-                            <img class="card-img-top rounded-circle mb-3 card-img" src="/static/CaraPio_rgb.png">
-                            <h5 class="card-title">Pio</h5>
-                            <p class="card-text">14 - 17 Joër</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-2">
-                <div class="card border-0">
-                    <a class=black-link href="/apply">
-                        <div class="card-body text-center">
-                            <img class="card-img-top rounded-circle mb-3 card-img" src="/static/RaRo_rgb.png">
-                            <h5 class="card-title">Rover</h5>
-                            <p class="card-text">17 - 23 Joër</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
