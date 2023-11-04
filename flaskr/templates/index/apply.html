@@ -51,7 +51,7 @@
                 </div>
                 
                 <div class="branch wellefcher explorer pio rover">
-                    <!-- Coordonnéeën vum Kand -->
+                    <!-- Coordonnéeën vum user -->
                     <div class="row mb-3 justify-content-center">
                         <div class="col-md-12 p-0">
                             <h2 class="txt-scoutGreen">Meng Coordonnéeën</h2>
@@ -358,25 +358,34 @@ $(".image-checkbox").on("click", function (e) {
 </script>
 
 <script>
-    // Hide all 
+    // Hide all divs with class "branch" when page is loaded
     branches = document.querySelectorAll('.branch')
     for (var i = 0; i < branches.length; i++) {
             branches[i].style.display = 'none';
         }
-        
+    
+    // On click on a specific branch: hide all divs, then show
     function showGroup(groupName) {
         var branches = document.querySelectorAll('.branch');
-        // Hide all initially
+        // Hide all initially, disable inputs
         for (var i = 0; i < branches.length; i++) {
             branches[i].style.display = 'none';
+            branches[i].querySelectorAll('input, select').forEach(function(input) {
+            input.setAttribute('disabled', 'disabled');
+        });
         }
         
         // Display selected group form
         var selectedGroups = document.querySelectorAll('.' + groupName);
         selectedGroups.forEach(function(group) {
             group.style.display = 'block';
+            group.querySelector
+            group.querySelectorAll('input, select').forEach(function(input) {
+            input.removeAttribute('disabled');
         });
-    }
+    });
+
+}
 </script>
 
 {% endblock %}
