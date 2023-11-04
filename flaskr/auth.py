@@ -12,64 +12,54 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 @bp.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        # user info dictionary
-        user_info = {
-            "first_name": request.form.get("first_name").upper(),
-            "last_name":request.form.get("last_name").upper(),
-            "username": request.form.get("username"),
-            "password": request.form.get("password"),
-            "password_confirm": request.form.get("passwordConfirm"),
-            "birthday": request.form.get("birthday"),
-            "gender": request.form.get("gender").upper(),
-            "house_number": request.form.get("house_number"),
-            "street": request.form.get("street").upper(),
-            "town": request.form.get("town").upper(),
-            "country": request.form.get("country"),
-            "zip": request.form.get("zip"),
-            "conditions": request.form.get("conditionsCheck")
-        }
         
-        # If falsy input, return register.html
-        for info in user_info:
-            if not user_info[info]:
+        # request form info (immutable object) 
+        user_info_immutable = request.form
+        
+        # initialize dict (mutable object) 
+        user_info = {}
+        
+        # check for falsy input, strip input from leading and trailing whitespaces
+        for info in user_info_immutable:
+            if not user_info_immutable[info]:
+                user_info = {}
                 flash("Fëllt all d'Felder w.e.g aus")
                 return render_template("auth/register.html")
+            user_info[info] = user_info_immutable[info].strip()
         
-        # If passwords not identical, return register.html
+        # if passwords not identical, return register.html
         if user_info["password"] != user_info["password_confirm"]:
             flash("Dir hudd zwee verschidden Passwieder agin.")
             return render_template("auth/register.html")
             
-        # Initialize error to None:
+        # initialize error to None:
         error = None
         
-        # Connect to database
+        # connect to database
         db = get_db()
         
         try:
             # `db.execute` and `db.commit`: part of database connection object returned by `get_db()`
-            
             # insert into user table
-            db.execute("INSERT INTO user (username, first_name, last_name, password, birthday, gender) VALUES (?, ?, ?, ?, ?, ?)", (user_info["username"], user_info["first_name"], user_info["last_name"], generate_password_hash(user_info["password"]), user_info["birthday"], user_info["gender"],))
+            db.execute("INSERT INTO user (username, first_name, last_name, password, birthday, gender) VALUES (?, ?, ?, ?, ?, ?)", (user_info["username"], user_info["first_name"].upper(), user_info["last_name"].upper(), generate_password_hash(user_info["password"]), user_info["birthday"], user_info["gender"].upper(),))
             
         except db.IntegrityError:
-            error = f"User {user_info['username']} gëtt et schon."
-            flash (error)
+            flash(f"User {user_info['username']} gëtt et schon.")
             return render_template("auth/register.html", txt_color="text-danger")
             
         try:
-            # catch id
+            # get user id
             id = db.execute("SELECT id FROM user WHERE username = ?", (user_info["username"],)).fetchone()[0]
 
             # insert into address table
-            db.execute("INSERT INTO address (user_id, house_number, street, town, country, zip) VALUES (?, ?, ?, ?, ?, ?)", (id, user_info["house_number"], user_info["street"], user_info["town"], user_info["country"], user_info["zip"],))
+            db.execute("INSERT INTO address (user_id, house_number, street, town, country, zip) VALUES (?, ?, ?, ?, ?, ?)", (id, user_info["house_number"].upper(), user_info["street"].upper(), user_info["town"].upper(), user_info["country"].upper(), user_info["zip"],))
             
         except db.IntegrityError:
             error = f"Database integrity error at address table insertion"
             flash(error)
             return render_template("auth/register.html", txt_color="text-danger")
         
-        # commit db query
+        # commit database query
         db.commit()
         
         # Flash success message and redirect to login
