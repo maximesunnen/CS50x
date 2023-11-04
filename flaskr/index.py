@@ -40,97 +40,82 @@ def index():
 @bp.route("/apply", methods=["GET", "POST"])
 @login_required
 def apply():
+    # Get user info
+    db = get_db()
+    user_info = db.execute("SELECT * from user JOIN address ON user.id = address.user_id WHERE id = ?", (session["user_id"],)).fetchone()
+    
     # POST REQUEST
     if request.method == "POST":
+        print(user_info["first_name"])
         
-        # Form info: "form_info" is a dict containing three dicts
-    
-        form_info = {
-            "child_info": {
-                "branch": request.form.get("branch"),
-                "allergies": request.form.get("allergies"),
-                "diet": request.form.get("diet"),
-                "other_information": request.form.get("other_information") 
-            },
+        if user_info["scout_registration"] == "TRUE":
+            flash("Dir sidd schon ugemellt!")
+            return redirect(url_for("index.index"))
+        
+        else:
+            # request form information (immutable object)
+            form_info_immutable = request.form
+            print(f"initial: {form_info_immutable}")
             
-            "parent_1": {
-                "last_name": request.form.get("last_name_p1").upper(),
-                "first_name": request.form.get("first_name_p1").upper(),
-                "phone_number": request.form.get("number_p1"),
-                "email": request.form.get("email_p1")
-            },
+            # initialize dict (mutable object)
+            form_info = {}
             
-            "parent_2": {
-                "last_name": request.form.get("last_name_p2").upper(),
-                "first_name": request.form.get("first_name_p2").upper(),
-                "phone_number": request.form.get("number_p2"),
-                "email": request.form.get("email_p2")
-            },
-            
-            "emergency": {
-                "last_name": request.form.get("last_name_e").upper(),
-                "first_name": request.form.get("first_name_e").upper(),
-                "phone_number": request.form.get("number_e"),
-                "phone": request.form.get("phone_e"),
-                "email": request.form.get("email_e"),
-                "house_number": request.form.get("house_number_e"),
-                "street": request.form.get("street_e"),
-                "town": request.form.get("town_e"),
-                "country": request.form.get("country_e"),
-                "zip": request.form.get("zip_e"),
-            }
-        }
+            # check for falsy input, strip input from leading and trailing whitespaces
+            for info in form_info_immutable:
+                form_info[info] = form_info_immutable[info].strip()
 
-        # Connect to database
-        db = get_db()
-    
-        try:
-            # Update user table with child info
-            db.execute("UPDATE user SET branch=?, allergies=?, diet=?, otherInformation=? WHERE id = ?", (*form_info["child_info"].values(), session["user_id"]))
-            
-            # If parent_1 not already in the database, insert
-            integrity_check = db.execute("SELECT * FROM parent WHERE email = ?", (form_info["parent_1"]["email"],)).fetchone()
-            
-            if integrity_check is None:
-                db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (*form_info["parent_1"].values(),))
-            
-        except db.IntegrityError:
-            flash("E Problem ass opgetrueden. Feeler Code 100.")
-            return redirect(url_for("index.apply"))
+            # Connect to database
+            db = get_db()
         
-        try:
-            # Check if form for parent 2 is filled in
-            if form_filled_in(form_info["parent_2"]):
+            try:
+                # Update user table with child info
+                db.execute("UPDATE user SET branch=?, allergies=?, diet=?, otherInformation=? WHERE id = ?", (form_info["branch"], form_info["allergies"], form_info["diet"], form_info["otherInformation"], session["user_id"]))
                 
-                # If parent 2 is not already in the database, insert
-                integrity_check = db.execute("SELECT FROM parent WHERE email = ?", (form_info["parent_2"]["email"],)).fetchone()
+                # If parent_1 not already in the database, insert into parent table
+                integrity_check = db.execute("SELECT * FROM parent WHERE email = ?", (form_info["email_p1"],)).fetchone()
                 
                 if integrity_check is None:
-                    db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (*form_info["parent_2"].values(),))
-            
-        except db.IntegrityError:
-            flash("E Problem ass opgetrueden. Feeler Code 101.")
-            return redirect(url_for("index.apply"))
-        
-        try:
-            # Link parent(s) with child
-            parent_id = db.execute("SELECT id FROM parent WHERE email = ? OR email = ?", (form_info["parent_1"]["email"], form_info["parent_2"]["email"]))
-            
-            for id in parent_id:
-                    db.execute("INSERT INTO parent_child (parent_id, child_id) VALUES (?, ?)", (id[0], session["user_id"]))
+                    db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (form_info["first_name_p1"], form_info["last_name_p1"], form_info["number_p1"], form_info["email_p1"]))
                 
-        except db.IntegrityError:
-            flash("E Problem ass opgetrueden. Feeler Code 102.")
-            return redirect(url_for("index.apply"))
+            except db.IntegrityError:
+                flash("E Problem ass opgetrueden. Feeler Code 100.")
+                return redirect(url_for("index.apply"))
             
-        # Update user database and set scout_registration to TRUE
-        db.execute("UPDATE user SET scout_registration = ? WHERE id = ?", ("TRUE", session["user_id"]))
-        
-        # Commit database changes
-        db.commit()
+            if "email_p2" in form_info:
+                try:    
+                    # If parent 2 is not already in the database, insert into parent table
+                    integrity_check = db.execute("SELECT * FROM parent WHERE email = ?", (form_info["email_p2"],)).fetchone()
+                
+                    if integrity_check is None:
+                        db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (form_info["first_name_p2"], form_info["last_name_p2"], form_info["number_p2"], form_info["email_p2"]))
+                
+                except db.IntegrityError:
+                    flash("E Problem ass opgetrueden. Feeler Code 101.")
+                    return redirect(url_for("index.apply"))
+            
+            try:
+                # Get parent email
+                if "email_p2" in form_info:
+                    # Link parent(s) with child
+                    parent_id = db.execute("SELECT id FROM parent WHERE email = ? OR email = ?", (form_info["email_p1"], form_info["email_p2"]))
+                else:
+                    parent_id = db.execute("SELECT id FROM parent WHERE email = ?", (form_info["email_p1"], ))
+                
+                for id in parent_id:
+                        db.execute("INSERT INTO parent_child (parent_id, child_id) VALUES (?, ?)", (id[0], session["user_id"]))
+                    
+            except db.IntegrityError:
+                flash("E Problem ass opgetrueden. Feeler Code 102.")
+                return redirect(url_for("index.apply"))
+                
+            # Update user database and set scout_registration to TRUE
+            db.execute("UPDATE user SET scout_registration = ? WHERE id = ?", ("TRUE", session["user_id"]))
+            
+            # Commit database changes
+            db.commit()
 
-        # Return to home
-        return redirect(url_for("index.index"))
+            # Return to home
+            return redirect(url_for("index.index"))
     
     # GET REQUEST
     # Image dictionary for Jinja looping
@@ -140,11 +125,6 @@ def apply():
         "pio": url_for('static', filename='images/pio.png'),
         "rover": url_for('static', filename='images/rover.png')
     }
-    # Connect to database
-    db = get_db()
-    
-    # Get user data
-    user_info = db.execute("SELECT * from user JOIN address ON user.id = address.user_id WHERE id = ?", (session["user_id"],)).fetchone()
     
     # Form questions
     questions = {
