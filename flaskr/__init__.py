@@ -38,9 +38,24 @@ def create_app(test_config=None):
     app.register_blueprint(index.bp)
     app.add_url_rule('/', endpoint='index')
     
+    from . import forms
+    
+    
+    # Flask-Mail configuration
+    app.config['MAIL_SERVER']='sandbox.smtp.mailtrap.io'
+    app.config['MAIL_PORT'] = 2525
+    app.config['MAIL_USERNAME'] = 'bda6faffb09416'
+    app.config['MAIL_PASSWORD'] = 'c0e18111684897'
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
+
+    # import mail from mail.py
+    from .mail import mail
+    mail.init_app(app)
+    
     # Add simple route for testing
     @app.route('/test')
     def test():
-        return 'Hello, World!'
+        return "Test"
 
     return app
