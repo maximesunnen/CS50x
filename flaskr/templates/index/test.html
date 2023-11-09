@@ -1,0 +1,526 @@
+{% extends "base.html" %}
+{% set active_page = "/contact" %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6 my-3">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button {% if active_tab == 'form-user' %} class="nav-link active" {% else %} class="nav-link" {% endif %} id="user-tab" data-bs-toggle="tab" data-bs-target="#user" type="button" role="tab">Coordonneeën</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button {% if active_tab == "form-tutor" %} class="nav-link active" {% else %} class="nav-link" {% endif %} id="tutor-tab" data-bs-toggle="tab" data-bs-target="#tutor" type="button" role="tab">Tuteurs</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button {% if active_tab == "form-urgent" %} class="nav-link active" {% else %} class="nav-link" {% endif %} id="urgent-tab" data-bs-toggle="tab" data-bs-target="#urgent" type="button" role="tab">Noutfall</button>
+          </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content" id="myTabContent">
+  <!-- Tab: User -->
+  <div class="tab-pane fade {% if active_tab == 'form-user' %} show active {% endif %}" id="user" role="tabpanel">
+    <form method="POST" action="{{ url_for('index.contact') }}" class="text-center" novalidate>
+      {{ form_user.csrf_token }}
+      <div class="container">        
+        <div class="row justify-content-center">
+          <div class="col-md-6 bg-light rounded p-2">
+            <div class="row mb-2">
+              <div class="col-md-4">
+                  <!-- First name -->
+                  {% if user_data["first_name"] %}
+                    {{ form_user.first_name(class_="form-control", value=user_data["first_name"]) }}
+                  {% else %}
+                    {{ form_user.first_name(class_="form-control", placeholder="Virnumm*") }}
+                  {% endif %}
+
+                  {% if form_user.first_name.errors %}
+                  <ul class="errors">
+                    {% for error in form_user.first_name.errors %}
+                      <li class="txt-scoutGreen">{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+              </div>
+
+              <div class="col-md-4">
+                <!-- Last name -->
+                {% if user_data["last_name"] %}
+                  {{ form_user.last_name(class_="form-control", value=user_data["last_name"]) }}
+                {% else %}
+                  {{ form_user.last_name(class_="form-control", placeholder="Nonumm*") }}
+                {% endif %}
+
+                {% if form_user.last_name.errors %}
+                  <ul class="errors">
+                    {% for error in form_user.last_name.errors %}
+                      <li class="txt-scoutGreen">{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+
+              <div class="col-md-4">
+                <!-- Birthday -->
+                {% if user_data["birthday"] %}
+                  {{ form_user.birthday(class_="form-control", value=user_data["birthday"]) }}
+                {% else %}
+                  {{ form_user.birthday(class_="form-control") }}
+                {% endif %}
+
+                {% if form_user.birthday.errors %}
+                <ul class="errors">
+                  {% for error in form_user.birthday.errors %}
+                      <li class="txt-scoutGreen">{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="row mb-2">
+              <div class="col-md-4">
+                <!-- Gender -->
+                {% if user_data["gender"] %}
+                <div class="form-group">
+                  <div class="form-control">
+                    <div>
+                      <input id="male" name="gender" type="radio" value="Männlech" {% if user_data["gender"] == "Männlech" %} checked {% else %} {% endif %}>
+                      <label class="form-check-label" for="male">Männlech</label>
+                    </div>
+                    <div>
+                      <input id="female" name="gender" type="radio" value="Weiblech" {% if user_data["gender"] == "Weiblech" %} checked {% else %} {% endif %}>
+                      <label class="form-check-label" for="female">Weiblech</label>
+                    </div>
+                  </div>
+                </div>
+                {% else %}
+                  {{ form_user.gender(style="list-style:none", class_="form-control") }}
+                {% endif %}
+
+              </div>
+
+              <div class="col-md-4">
+                <!-- Number -->
+                {% if user_data["number"] %}
+                  {{ form_user.number(class_="form-control", value=user_data["number"]) }}
+                {% else %}
+                  {{ form_user.number(class_="form-control", placeholder="Handynummer") }}
+                {% endif %}
+
+                {% if form_user.number.errors %}
+                <ul class="errors">
+                  {% for error in form_user.number.errors %}
+                      <li class="txt-scoutGreen">{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+
+              <div class="col-md-4">
+                <!-- Branch -->
+                {% if user_data["branch"] %}
+                  {{ form_user.branch(class_="form-select", value=user_data["branch"]) }}
+                {% else %}
+                  {{ form_user.branch(class_="form-select") }}
+                {% endif %}
+              </div>
+            </div>
+            
+            <!-- Email -->
+            <div class="row mb-2">
+              <div class="col-md-6">
+                {% if user_data["email"] %}
+                  {{ form_user.email(class_="form-control", value=user_data["email"]) }}
+                {% else %}
+                  {{ form_user.email(class_="form-control", placeholder="Email") }}
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- House number -->
+            <div class="row mb-2">
+              <div class="col-md-2">
+                {% if user_data["house_number"] %}
+                  {{ form_user.house_number(class_="form-control", value=user_data["house_number"]) }}
+                {% else %}
+                  {{ form_user.house_number(class_="form-control", placeholder="Nr.*") }}
+                {% endif %}
+
+                {% if form_user.house_number.errors %}
+                <ul class="errors">
+                  {% for error in form_user.house_number.errors %}
+                      <li class="txt-scoutGreen">{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+
+            <!-- Street -->
+              <div class="col-md-5">
+                {% if user_data["street"] %}
+                  {{ form_user.street(class_="form-control", value=user_data["street"]) }}
+                {% else %}
+                  {{ form_user.street(class_="form-control", placeholder="Strooss*") }}
+                {% endif %}
+
+                {% if form_user.street.errors %}
+                <ul class="errors">
+                  {% for error in form_user.street.errors %}
+                      <li class="txt-scoutGreen">{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+
+            <!-- Town -->
+              <div class="col-md-5">
+                {% if user_data["town"] %}
+                  {{ form_user.town(class_="form-control", value=user_data["town"]) }}
+                {% else %}
+                  {{ form_user.town(class_="form-control", placeholder="Uertschaft*") }}
+                {% endif %}
+
+                {% if form_user.town.errors %}
+                <ul class="errors">
+                  {% for error in form_user.town.errors %}
+                      <li class="txt-scoutGreen">{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+            </div>
+
+              
+            <div class="row mb-2">
+              <!-- Zip -->
+              <div class="col-md-2">
+                {% if user_data["zip"] %}
+                  {{ form_user.zip(class_="form-control", value=user_data["zip"]) }}
+                {% else %}
+                  {{ form_user.zip(class_="form-control", placeholder="Plz*") }}
+                {% endif %}
+
+                {% if form_user.zip.errors %}
+                <ul class="errors">
+                  {% for error in form_user.zip.errors %}
+                      <li class="txt-scoutGreen">{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+
+              <!-- Country -->
+              <div class="col-md-5">
+                {% if user_data["country"] %}
+                  {{ form_user.country(class_="form-control", value=user_data["country"]) }}
+                {% else %}
+                  {{ form_user.country(class_="form-control", placeholder="Land") }}
+                {% endif %}
+
+                {% if form_user.country.errors %}
+                <ul class="errors">
+                  {% for error in form_user.country.errors %}
+                      <li class="txt-scoutGreen">{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row mt-5">
+              <div class="col-md-12 mb-2">
+                <!-- Allergies -->
+                {% if user_data["allergies"] %}
+                  {{ form_user.allergies(class_="form-control", value=user_data["allergies"]) }}
+                {% else %}
+                  {{ form_user.allergies(class_="form-control", placeholder="Ech hun Allergien op ...") }}
+                {% endif %}
+              </div>
+
+              <div class="col-md-12 mb-2">
+                <!-- Diet -->
+                {% if user_data["diet"] %}
+                  {{ form_user.diet(class_="form-control", value=user_data["diet"]) }}
+                {% else %}
+                  {{ form_user.diet(class_="form-control", placeholder="Ech hun e spezielle Régime ...") }}
+                {% endif %}
+              </div>
+
+              <!-- Other Information -->
+              <div class="col-md-12">
+                {% if user_data["other_information"] %}
+                  <textarea id="other_information" class="form-control" name="other_information">{{  user_data["other_information"] }}</textarea>
+                {% else %}
+                  {{ form_user.other_information(class_="form-control", placeholder="Aner Informatiounen iwert mech ...") }}
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row mt-5 text-end">
+              <div class="col-md-12">
+                {{ form_user.submit_1(class="btn bg-scoutYellow")}}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tab: Tuteurs -->
+  <div class="tab-pane {% if active_tab == 'form-tutor' %} show active {% endif %} " id="tutor" role="tabpanel">
+    <form action="{{ url_for('index.contact') }}" method="post" novalidate>
+      {{ form_tutor1.csrf_token }}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6 bg-light rounded p-2">
+            <h4 class="mb-3">Tuteur 1</h4>
+            <!-- Tuteur 1 -->
+            <div class="row mb-2 mb-2">
+              <div class="col-md-4">
+                <!-- First name -->
+                {% if tutor_data["first_name_1"] %}
+                  {{ form_tutor1.first_name_1(class_="form-control", value=tutor_data["first_name_1"]) }}
+                {% else %}
+                  {{ form_tutor1.first_name_1(placeholder="Virnumm*", class_="form-control") }}
+                {% endif %}
+
+                {% if form_tutor1.errors %}
+                <ul class="errors">
+                    {% for error in form_tutor1.first_name_1.errors %}
+                    <li class="txt-scoutGreen">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+
+              <div class="col-md-4">
+                <!-- Last name -->
+                {% if tutor_data["last_name_1"] %}
+                  {{ form_tutor1.last_name_1(class_="form-control", value=tutor_data["last_name_1"]) }}
+                {% else %}
+                  {{ form_tutor1.last_name_1(placeholder="Nonumm*", class_="form-control") }}
+                {% endif %}
+
+                {% if form_tutor1.errors %}
+                <ul class="errors">
+                    {% for error in form_tutor1.last_name_1.errors %}
+                    <li class="txt-scoutGreen">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+
+              <div class="col-md-4">
+                <!-- Number -->
+                {% if tutor_data["number_1"] %}
+                  {{ form_tutor1.number_1(class_="form-control", value=tutor_data["number_1"]) }}
+                {% else %}
+                  {{ form_tutor1.number_1(placeholder="Nummer*", class_="form-control") }}
+                {% endif %}
+                {% if form_tutor1.errors %}
+                <ul class="errors">
+                    {% for error in form_tutor1.number_1.errors %}
+                    <li class="txt-scoutGreen">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row mb-2">
+              <div class="col-md-8">
+                <!-- Email -->
+                {% if tutor_data["email_1"] %}
+                  {{ form_tutor1.email_1(class_="form-control", value=tutor_data["email_1"]) }}
+                {% else %}
+                  {{ form_tutor1.email_1(placeholder="Email*", class_="form-control") }}
+                {% endif %}
+                {% if form_tutor1.errors %}
+                <ul class="errors">
+                    {% for error in form_tutor1.email_1.errors %}
+                    <li class="txt-scoutGreen">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Tuteur 2 -->
+            <h4 class="my-3">Tuteur 2</h4>
+            <div class="row mb-2">
+              <div class="col-md-4">
+                <!-- First name -->
+                {% if tutor_data["first_name_2"] %}
+                  {{ form_tutor1.first_name_2(class_="form-control", value=tutor_data["first_name_2"]) }}
+                {% else %}
+                  {{ form_tutor1.first_name_2(placeholder="Virnumm", class_="form-control") }}
+                {% endif %}
+                {% if form_tutor1.errors %}
+                <ul class="errors">
+                    {% for error in form_tutor1.first_name_2.errors %}
+                    <li class="txt-scoutGreen">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+
+              <div class="col-md-4">
+                <!-- Last name -->
+                {% if tutor_data["last_name_2"] %}
+                  {{ form_tutor1.last_name_2(class_="form-control", value=tutor_data["last_name_2"]) }}
+                {% else %}
+                  {{ form_tutor1.last_name_2(placeholder="Nonumm", class_="form-control") }}
+                {% endif %}
+                {% if form_tutor1.errors %}
+                <ul class="errors">
+                    {% for error in form_tutor1.last_name_2.errors %}
+                    <li class="txt-scoutGreen">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+
+              <div class="col-md-4">
+                <!-- Number -->
+                {% if tutor_data["number_2"] %}
+                  {{ form_tutor1.number_2(class_="form-control", value=tutor_data["number_2"]) }}
+                {% else %}
+                  {{ form_tutor1.number_2(placeholder="Nummer", class_="form-control") }}
+                {% endif %}
+                {% if form_tutor1.errors %}
+                <ul class="errors">
+                    {% for error in form_tutor1.number_2.errors %}
+                    <li class="txt-scoutGreen">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-md-8">
+                <!-- Email -->
+                {% if tutor_data["email_2"] %}
+                  {{ form_tutor1.email_2(class_="form-control", value=tutor_data["email_2"]) }}
+                {% else %}
+                  {{ form_tutor1.email_2(placeholder="Email", class_="form-control") }}
+                {% endif %}
+
+                {% if form_tutor1.errors %}
+                <ul class="errors">
+                    {% for error in form_tutor1.email_2.errors %}
+                    <li class="txt-scoutGreen">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row mt-5 text-end">
+              <div class="col-md-12">
+                {{ form_tutor1.submit_2(class="btn bg-scoutYellow")}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <div class="tab-pane fade {% if active_tab == 'form-urgent' %} show active {% endif %}" id="urgent" role="tabpanel">
+    <form method="POST" action="{{ url_for('index.contact') }}" class="text-center" novalidate>
+      {{ form_urgent.csrf_token }}
+      <div class="container">        
+        <div class="row justify-content-center">
+          <div class="col-md-6 bg-light rounded p-2">
+            <div class="row mb-2">
+              <h4 class="text-start mb-3">Am Fall wou d'Tuteuren nët areechbar sin, soll dës Persoun kontaktéiert gin</h4>
+              <div class="col-md-4">
+                <!-- First name -->
+                {% if urgent_data["first_name_3"] %}
+                  {{ form_urgent.first_name_3(class_="form-control", value=urgent_data["first_name_3"]) }}
+                {% else %}
+                  {{ form_urgent.first_name_3(class_="form-control", placeholder="Virnumm*") }}
+                {% endif %}
+
+                {% if form_urgent.first_name_3.errors %}
+                <ul class="errors">
+                  {% for error in form_urgent.first_name_3.errors %}
+                    <li class="txt-scoutGreen">{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+
+              <div class="col-md-4">
+                <!-- Last name -->
+                {% if urgent_data["last_name_3"] %}
+                  {{ form_urgent.last_name_3(class_="form-control", value=urgent_data["last_name_3"]) }}
+                {% else %}
+                  {{ form_urgent.last_name_3(class_="form-control", placeholder="Nonumm*") }}
+                {% endif %}
+
+                {% if form_urgent.last_name_3.errors %}
+                  <ul class="errors">
+                    {% for error in form_urgent.last_name_3.errors %}
+                      <li class="txt-scoutGreen">{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+
+              <div class="col-md-4">
+                <!-- Number -->
+                {% if urgent_data["number_3"] %}
+                  {{ form_urgent.number_3(class_="form-control", value=urgent_data["number_3"]) }}
+                {% else %}
+                  {{ form_urgent.number_3(class_="form-control", placeholder="Nummer*") }}
+                {% endif %}
+
+                {% if form_urgent.number_3.errors %}
+                  <ul class="errors">
+                    {% for error in form_urgent.number_3.errors %}
+                      <li class="txt-scoutGreen">{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-8">
+                <!-- Number -->
+                {% if urgent_data["email_3"] %}
+                  {{ form_urgent.email_3(class_="form-control", value=urgent_data["email_3"]) }}
+                {% else %}
+                  {{ form_urgent.email_3(class_="form-control", placeholder="Email*") }}
+                {% endif %}
+
+                {% if form_urgent.email_3.errors %}
+                  <ul class="errors">
+                    {% for error in form_urgent.email_3.errors %}
+                      <li class="txt-scoutGreen">{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row mt-5">
+              <div class="col-md-12 text-end">
+                {{ form_urgent.submit_3(class_="btn bg-scoutYellow")}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

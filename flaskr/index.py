@@ -11,6 +11,12 @@ from flaskr.auth import login_required
 
 from .helpers.form_helpers import form_filled_in
 
+from flaskr.forms import userForm, tutorForm1, urgentForm
+
+from .mail import mail
+
+from flask_mail import Message
+
 bp = Blueprint("index", __name__)
 
 # This BP should handle ALL the routes that should be accessible to anyone, not only those with an account
@@ -38,104 +44,85 @@ def index():
     return render_template("index/index.html", branches=branches)
 
 @bp.route("/apply", methods=["GET", "POST"])
-@login_required
+
 def apply():
-    # Get user info
-    db = get_db()
-    user_info = db.execute("SELECT * from user JOIN address ON user.id = address.user_id WHERE id = ?", (session["user_id"],)).fetchone()
+    # instantiate CourseForm() class; save instance in `form`
+    form = CourseForm()
     
-    # POST REQUEST
-    if request.method == "POST":
-        print(user_info["first_name"])
+    # validate_on_submit checks for POST request
+    if form.validate_on_submit():
         
-        if user_info["scout_registration"] == "TRUE":
-            flash("Dir sidd schon ugemellt!")
+        # Connect to database
+        db = get_db()
+        
+        # Add user to database
+        try:
+            db.execute("INSERT INTO user (first_name, last_name, birthday, gender, allergies, diet, branch, other_information) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                       (form.first_name.data.strip().upper(), form.last_name.data.strip().upper(), form.birthday.data, 
+                        form.gender.data.strip().upper(), form.allergies.data, form.diet.data, 
+                        form.branch.data.strip().upper(), form.other_information.data))
+        except db.IntegrityError:
+            flash("Feeler Code 100")
             return redirect(url_for("index.index"))
         
-        else:
-            # request form information (immutable object)
-            form_info_immutable = request.form
-            print(f"initial: {form_info_immutable}")
-            
-            # initialize dict (mutable object)
-            form_info = {}
-            
-            # check for falsy input, strip input from leading and trailing whitespaces
-            for info in form_info_immutable:
-                form_info[info] = form_info_immutable[info].strip()
-
-            # Connect to database
-            db = get_db()
+        db.commit()
         
-            try:
-                # Update user table with child info
-                db.execute("UPDATE user SET branch=?, allergies=?, diet=?, otherInformation=? WHERE id = ?", (form_info["branch"], form_info["allergies"], form_info["diet"], form_info["otherInformation"], session["user_id"]))
-                
-                # If parent_1 not already in the database, insert into parent table
-                integrity_check = db.execute("SELECT * FROM parent WHERE email = ?", (form_info["email_p1"],)).fetchone()
-                
-                if integrity_check is None:
-                    db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (form_info["first_name_p1"], form_info["last_name_p1"], form_info["number_p1"], form_info["email_p1"]))
-                
-            except db.IntegrityError:
-                flash("E Problem ass opgetrueden. Feeler Code 100.")
-                return redirect(url_for("index.apply"))
-            
-            if "email_p2" in form_info:
-                try:    
-                    # If parent 2 is not already in the database, insert into parent table
-                    integrity_check = db.execute("SELECT * FROM parent WHERE email = ?", (form_info["email_p2"],)).fetchone()
-                
-                    if integrity_check is None:
-                        db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (form_info["first_name_p2"], form_info["last_name_p2"], form_info["number_p2"], form_info["email_p2"]))
-                
-                except db.IntegrityError:
-                    flash("E Problem ass opgetrueden. Feeler Code 101.")
-                    return redirect(url_for("index.apply"))
-            
-            try:
-                # Get parent email
-                if "email_p2" in form_info:
-                    # Link parent(s) with child
-                    parent_id = db.execute("SELECT id FROM parent WHERE email = ? OR email = ?", (form_info["email_p1"], form_info["email_p2"]))
-                else:
-                    parent_id = db.execute("SELECT id FROM parent WHERE email = ?", (form_info["email_p1"], ))
-                
-                for id in parent_id:
-                        db.execute("INSERT INTO parent_child (parent_id, child_id) VALUES (?, ?)", (id[0], session["user_id"]))
-                    
-            except db.IntegrityError:
-                flash("E Problem ass opgetrueden. Feeler Code 102.")
-                return redirect(url_for("index.apply"))
-                
-            # Update user database and set scout_registration to TRUE
-            db.execute("UPDATE user SET scout_registration = ? WHERE id = ?", ("TRUE", session["user_id"]))
-            
-            # Commit database changes
-            db.commit()
+        # Send email with new application
+        from pandas import DataFrame
+        
+        msg = Message('Nei Umeldung bei den Wëllefcher', sender =   'peter@mailtrap.io', recipients = ['paul@mailtrap.io'])
+        
+        data = DataFrame([form.data])
 
-            # Return to home
-            return redirect(url_for("index.index"))
+        data.to_csv('flaskr/test.csv', index=False, encoding="utf-8")
+        
+        from flask import current_app
+        
+        with current_app.open_resource("test.csv") as fp:
+            msg.attach("test.csv", "text/csv", fp.read())
+            
+        mail.send(msg)
+        
+        return "Message sent!"
+        
+        # Redirect and flash message
+        flash("Dir gouft ugemellt!")
+        return redirect(url_for("index.index"))
     
-    # GET REQUEST
-    # Image dictionary for Jinja looping
-    branch_images = {
-        "wellefcher": url_for('static', filename='images/wellefcher.jpeg'),
-        "explorer": url_for('static', filename='images/avex.png'),
-        "pio": url_for('static', filename='images/pio.png'),
-        "rover": url_for('static', filename='images/rover.png')
-    }
-    
-    # Form questions
-    questions = {
-        1: "Ech sin domat averstanen, dass vu mengem Kand Fotoe gemaach gin.",
-        2: "Ech sin domat averstanen, dass Fotoen, déi am Laf vu (Gruppen)Aktivitéiten vu mengem Kand gemach gin, op de soziale Medien (Facebook) vum Käler Scoutsgrupp gedeelt kenne gin.",
-        3: "Ech sin domat averstanen, dass meng Email Adress an Telefonsnummer benotzt gin, fir vun de Cheffe kontaktéiert ze gin.",
-        4: "Mäi Kand dierf no der Versammlung eleng heem goen."
-    }
-    
-    return render_template("index/apply.html", questions=questions, user_info=user_info, branch_images=branch_images)
+    return render_template("index/wtforms-test.html", form=form)
 
-@bp.route("/contact")
+@bp.route("/contact", methods=["GET", "POST"])
 def contact():
-    return render_template("index/contact.html")
+    form_user = userForm()
+    form_tutor1 = tutorForm1()
+    form_urgent = urgentForm()
+    
+    if request.method == "POST":
+        if form_user.submit_1.data:
+            if form_user.validate():
+                session["user_data"] = form_user.data
+                return render_template("index/test.html", active_tab="form-tutor", form_user=form_user, form_tutor1=form_tutor1, form_urgent=form_urgent, 
+                                                                                    user_data=session["user_data"], tutor_data={}, urgent_data={})
+            else:
+                return render_template("index/test.html", active_tab="form-user", form_user=form_user, form_tutor1=form_tutor1, form_urgent=form_urgent, user_data={}, tutor_data={}, urgent_data={})
+        
+        if form_tutor1.submit_2.data:
+            if form_tutor1.validate():
+                session["tutor_data"] = form_tutor1.data
+                return render_template("index/test.html", active_tab="form-urgent", form_user=form_user, form_tutor1=form_tutor1, form_urgent=form_urgent,
+                                                                                    user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data={})
+            else:
+                return render_template("index/test.html", active_tab="form-tutor", form_user=form_user, form_tutor1=form_tutor1, form_urgent=form_urgent,
+                                                                                    user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data=session["urgent_data"])
+            
+        if form_urgent.submit_3.data:
+            if form_urgent.validate():
+                session["urgent_data"] = form_urgent.data
+                return redirect(url_for("index.index"))
+            else:
+                return render_template("index/test.html", active_tab="form-urgent", form_user=form_user, form_tutor1=form_tutor1, form_urgent=form_urgent, 
+                                                                                    user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data=session["urgent_data"])
+
+    
+    if request.method == "GET":
+        return render_template("index/test.html", active_tab="form-user", form_user=form_user, form_tutor1=form_tutor1, form_urgent=form_urgent, user_data={}, tutor_data={}, urgent_data={})
