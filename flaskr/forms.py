@@ -35,9 +35,9 @@ class userForm(FlaskForm):
     
     tab = "form-user"
     name = "form_user"
-    tab_redirect = "form-tutor"
+    redirect_tab = "form-tutor"
     
-class tutorForm1(FlaskForm):
+class tutorForm(FlaskForm):
     first_name_1 = StringField('Virnumm', validators=[InputRequired()])
     last_name_1 = StringField('Numm', validators=[InputRequired()])
     number_1 = StringField('Handynummer', validators=[InputRequired()])
@@ -51,8 +51,8 @@ class tutorForm1(FlaskForm):
     submit_2 = SubmitField("Weider")
     
     tab = "form-tutor"
-    name = "form_tutor1"
-    tab_redirect = "form-urgent"
+    name = "form_tutor"
+    redirect_tab = "form-urgent"
     
 class urgentForm(FlaskForm):
     first_name_3 = StringField('Virnumm', validators=[InputRequired()])
@@ -64,7 +64,7 @@ class urgentForm(FlaskForm):
     
     tab = "form-urgent"
     name = "form_urgent"
-    tab_redirect = ""
+    redirect_tab = ""
 
     
 

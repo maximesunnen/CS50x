@@ -11,7 +11,7 @@ from flaskr.auth import login_required
 
 from .helpers.form_helpers import form_filled_in
 
-from flaskr.forms import userForm, tutorForm1, urgentForm
+from flaskr.forms import userForm, tutorForm, urgentForm
 
 from .mail import mail
 
@@ -93,26 +93,72 @@ def apply():
 
 @bp.route("/contact", methods=["GET", "POST"])
 def contact():
+    # Initialize session data
+    for session_name in ["form_user_data", "form_tutor_data", "form_urgent_data"]:
+        if session.get(session_name) is None:
+            session[session_name] = {}
+
+    # Instantiate forms
     form_user = userForm()
-    form_tutor1 = tutorForm1()
+    form_tutor = tutorForm()
     form_urgent = urgentForm()
     
+    # Concatenate forms and corresponding submit buttons (as defined in forms.py)
+    forms = [form_user, form_tutor, form_urgent]
+    submit_buttons = ["submit_1", "submit_2", "submit_3"]
+    
+    # Post request logic
     if request.method == "POST":
+        for form, submit_button in zip(forms, submit_buttons):
+            # Check which submit button has been pressed
+            if getattr(form, submit_button).data:
+                # Check if form is valid
+                if form.validate():
+                    print("Valid form")
+                    print(form.name + "_data")
+                    session[form.name + "_data"] = form.data
+                    # Check if the valid form is the last one
+                    if form.redirect_tab == "":
+                        # Database logic
+                        
+                        # Commit database changes
+                        
+                        # Email logic
+                        
+                        # Clear session information (functional improvement to make: store this info in the form classes)
+                        for key in ["form_user_data", "form_tutor_data", "form_urgent_data"]:
+                            session.pop(key, default=None)
+                            
+                        # Redirect to home page and flash success message
+                        return redirect(url_for("index.index"))
+                    # If not last form, redirect to next
+                    else:
+                        return render_template("index/test.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, 
+                                                                                user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"])
+                
+                # if form invalid, render same html but fill in fields with data that has already been entered
+                else:
+                    print(form.name)
+                    return render_template("index/test.html", active_tab=form.tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, 
+                                                                                    user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"])
+                
+                    
+    """ if request.method == "POST":
         if form_user.submit_1.data:
             if form_user.validate():
                 session["user_data"] = form_user.data
-                return render_template("index/test.html", active_tab="form-tutor", form_user=form_user, form_tutor1=form_tutor1, form_urgent=form_urgent, 
-                                                                                    user_data=session["user_data"], tutor_data={}, urgent_data={})
+                return render_template("index/test.html", active_tab="form-tutor", form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, 
+                                                                                    user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data=session["urgent_data"])
             else:
-                return render_template("index/test.html", active_tab="form-user", form_user=form_user, form_tutor1=form_tutor1, form_urgent=form_urgent, user_data={}, tutor_data={}, urgent_data={})
+                return render_template("index/test.html", active_tab="form-user", form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data=session["urgent_data"])
         
-        if form_tutor1.submit_2.data:
-            if form_tutor1.validate():
-                session["tutor_data"] = form_tutor1.data
-                return render_template("index/test.html", active_tab="form-urgent", form_user=form_user, form_tutor1=form_tutor1, form_urgent=form_urgent,
-                                                                                    user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data={})
+        if form_tutor.submit_2.data:
+            if form_tutor.validate():
+                session["tutor_data"] = form_tutor.data
+                return render_template("index/test.html", active_tab="form-urgent", form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent,
+                                                                                    user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data=session["urgent_data"])
             else:
-                return render_template("index/test.html", active_tab="form-tutor", form_user=form_user, form_tutor1=form_tutor1, form_urgent=form_urgent,
+                return render_template("index/test.html", active_tab="form-tutor", form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent,
                                                                                     user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data=session["urgent_data"])
             
         if form_urgent.submit_3.data:
@@ -120,9 +166,8 @@ def contact():
                 session["urgent_data"] = form_urgent.data
                 return redirect(url_for("index.index"))
             else:
-                return render_template("index/test.html", active_tab="form-urgent", form_user=form_user, form_tutor1=form_tutor1, form_urgent=form_urgent, 
+                return render_template("index/test.html", active_tab="form-urgent", form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, 
                                                                                     user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data=session["urgent_data"])
-
-    
+                 """
     if request.method == "GET":
-        return render_template("index/test.html", active_tab="form-user", form_user=form_user, form_tutor1=form_tutor1, form_urgent=form_urgent, user_data={}, tutor_data={}, urgent_data={})
+        return render_template("index/test.html", active_tab="form-user", form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"])

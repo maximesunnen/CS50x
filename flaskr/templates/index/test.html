@@ -275,7 +275,7 @@
   <!-- Tab: Tuteurs -->
   <div class="tab-pane {% if active_tab == 'form-tutor' %} show active {% endif %} " id="tutor" role="tabpanel">
     <form action="{{ url_for('index.contact') }}" method="post" novalidate>
-      {{ form_tutor1.csrf_token }}
+      {{ form_tutor.csrf_token }}
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-md-6 bg-light rounded p-2">
@@ -285,14 +285,14 @@
               <div class="col-md-4">
                 <!-- First name -->
                 {% if tutor_data["first_name_1"] %}
-                  {{ form_tutor1.first_name_1(class_="form-control", value=tutor_data["first_name_1"]) }}
+                  {{ form_tutor.first_name_1(class_="form-control", value=tutor_data["first_name_1"]) }}
                 {% else %}
-                  {{ form_tutor1.first_name_1(placeholder="Virnumm*", class_="form-control") }}
+                  {{ form_tutor.first_name_1(placeholder="Virnumm*", class_="form-control") }}
                 {% endif %}
 
-                {% if form_tutor1.errors %}
+                {% if form_tutor.errors %}
                 <ul class="errors">
-                    {% for error in form_tutor1.first_name_1.errors %}
+                    {% for error in form_tutor.first_name_1.errors %}
                     <li class="txt-scoutGreen">{{ error }}</li>
                     {% endfor %}
                 </ul>
@@ -302,14 +302,14 @@
               <div class="col-md-4">
                 <!-- Last name -->
                 {% if tutor_data["last_name_1"] %}
-                  {{ form_tutor1.last_name_1(class_="form-control", value=tutor_data["last_name_1"]) }}
+                  {{ form_tutor.last_name_1(class_="form-control", value=tutor_data["last_name_1"]) }}
                 {% else %}
-                  {{ form_tutor1.last_name_1(placeholder="Nonumm*", class_="form-control") }}
+                  {{ form_tutor.last_name_1(placeholder="Nonumm*", class_="form-control") }}
                 {% endif %}
 
-                {% if form_tutor1.errors %}
+                {% if form_tutor.errors %}
                 <ul class="errors">
-                    {% for error in form_tutor1.last_name_1.errors %}
+                    {% for error in form_tutor.last_name_1.errors %}
                     <li class="txt-scoutGreen">{{ error }}</li>
                     {% endfor %}
                 </ul>
@@ -319,13 +319,13 @@
               <div class="col-md-4">
                 <!-- Number -->
                 {% if tutor_data["number_1"] %}
-                  {{ form_tutor1.number_1(class_="form-control", value=tutor_data["number_1"]) }}
+                  {{ form_tutor.number_1(class_="form-control", value=tutor_data["number_1"]) }}
                 {% else %}
-                  {{ form_tutor1.number_1(placeholder="Nummer*", class_="form-control") }}
+                  {{ form_tutor.number_1(placeholder="Nummer*", class_="form-control") }}
                 {% endif %}
-                {% if form_tutor1.errors %}
+                {% if form_tutor.errors %}
                 <ul class="errors">
-                    {% for error in form_tutor1.number_1.errors %}
+                    {% for error in form_tutor.number_1.errors %}
                     <li class="txt-scoutGreen">{{ error }}</li>
                     {% endfor %}
                 </ul>
@@ -337,13 +337,13 @@
               <div class="col-md-8">
                 <!-- Email -->
                 {% if tutor_data["email_1"] %}
-                  {{ form_tutor1.email_1(class_="form-control", value=tutor_data["email_1"]) }}
+                  {{ form_tutor.email_1(class_="form-control", value=tutor_data["email_1"]) }}
                 {% else %}
-                  {{ form_tutor1.email_1(placeholder="Email*", class_="form-control") }}
+                  {{ form_tutor.email_1(placeholder="Email*", class_="form-control") }}
                 {% endif %}
-                {% if form_tutor1.errors %}
+                {% if form_tutor.errors %}
                 <ul class="errors">
-                    {% for error in form_tutor1.email_1.errors %}
+                    {% for error in form_tutor.email_1.errors %}
                     <li class="txt-scoutGreen">{{ error }}</li>
                     {% endfor %}
                 </ul>
@@ -357,13 +357,13 @@
               <div class="col-md-4">
                 <!-- First name -->
                 {% if tutor_data["first_name_2"] %}
-                  {{ form_tutor1.first_name_2(class_="form-control", value=tutor_data["first_name_2"]) }}
+                  {{ form_tutor.first_name_2(class_="form-control", value=tutor_data["first_name_2"]) }}
                 {% else %}
-                  {{ form_tutor1.first_name_2(placeholder="Virnumm", class_="form-control") }}
+                  {{ form_tutor.first_name_2(placeholder="Virnumm", class_="form-control") }}
                 {% endif %}
-                {% if form_tutor1.errors %}
+                {% if form_tutor.errors %}
                 <ul class="errors">
-                    {% for error in form_tutor1.first_name_2.errors %}
+                    {% for error in form_tutor.first_name_2.errors %}
                     <li class="txt-scoutGreen">{{ error }}</li>
                     {% endfor %}
                 </ul>
@@ -373,13 +373,13 @@
               <div class="col-md-4">
                 <!-- Last name -->
                 {% if tutor_data["last_name_2"] %}
-                  {{ form_tutor1.last_name_2(class_="form-control", value=tutor_data["last_name_2"]) }}
+                  {{ form_tutor.last_name_2(class_="form-control", value=tutor_data["last_name_2"]) }}
                 {% else %}
-                  {{ form_tutor1.last_name_2(placeholder="Nonumm", class_="form-control") }}
+                  {{ form_tutor.last_name_2(placeholder="Nonumm", class_="form-control") }}
                 {% endif %}
-                {% if form_tutor1.errors %}
+                {% if form_tutor.errors %}
                 <ul class="errors">
-                    {% for error in form_tutor1.last_name_2.errors %}
+                    {% for error in form_tutor.last_name_2.errors %}
                     <li class="txt-scoutGreen">{{ error }}</li>
                     {% endfor %}
                 </ul>
@@ -389,13 +389,13 @@
               <div class="col-md-4">
                 <!-- Number -->
                 {% if tutor_data["number_2"] %}
-                  {{ form_tutor1.number_2(class_="form-control", value=tutor_data["number_2"]) }}
+                  {{ form_tutor.number_2(class_="form-control", value=tutor_data["number_2"]) }}
                 {% else %}
-                  {{ form_tutor1.number_2(placeholder="Nummer", class_="form-control") }}
+                  {{ form_tutor.number_2(placeholder="Nummer", class_="form-control") }}
                 {% endif %}
-                {% if form_tutor1.errors %}
+                {% if form_tutor.errors %}
                 <ul class="errors">
-                    {% for error in form_tutor1.number_2.errors %}
+                    {% for error in form_tutor.number_2.errors %}
                     <li class="txt-scoutGreen">{{ error }}</li>
                     {% endfor %}
                 </ul>
@@ -406,14 +406,14 @@
               <div class="col-md-8">
                 <!-- Email -->
                 {% if tutor_data["email_2"] %}
-                  {{ form_tutor1.email_2(class_="form-control", value=tutor_data["email_2"]) }}
+                  {{ form_tutor.email_2(class_="form-control", value=tutor_data["email_2"]) }}
                 {% else %}
-                  {{ form_tutor1.email_2(placeholder="Email", class_="form-control") }}
+                  {{ form_tutor.email_2(placeholder="Email", class_="form-control") }}
                 {% endif %}
 
-                {% if form_tutor1.errors %}
+                {% if form_tutor.errors %}
                 <ul class="errors">
-                    {% for error in form_tutor1.email_2.errors %}
+                    {% for error in form_tutor.email_2.errors %}
                     <li class="txt-scoutGreen">{{ error }}</li>
                     {% endfor %}
                 </ul>
@@ -423,7 +423,7 @@
 
             <div class="row mt-5 text-end">
               <div class="col-md-12">
-                {{ form_tutor1.submit_2(class="btn bg-scoutYellow")}}
+                {{ form_tutor.submit_2(class="btn bg-scoutYellow")}}
               </div>
             </div>
           </div>
