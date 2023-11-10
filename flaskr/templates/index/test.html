@@ -15,6 +15,9 @@
           <li class="nav-item" role="presentation">
             <button {% if active_tab == "form-urgent" %} class="nav-link active" {% else %} class="nav-link" {% endif %} id="urgent-tab" data-bs-toggle="tab" data-bs-target="#urgent" type="button" role="tab">Noutfall</button>
           </li>
+          <li class="nav-item" role="presentation">
+            <button {% if active_tab == "form-questions" %} class="nav-link active" {% else %} class="nav-link" {% endif %} id="questions-tab" data-bs-toggle="tab" data-bs-target="#questions" type="button" role="tab">Froën</button>
+          </li>
       </ul>
     </div>
   </div>
@@ -522,5 +525,33 @@
       </div>
     </form>
   </div>
+
+  <div class="tab-pane fade {% if active_tab == 'form-questions' %} show active {% endif %}" id="questions" role="tabpanel">
+    <form method="POST" action="{{ url_for('index.contact') }}" class="text-start" novalidate>
+      {{ form_urgent.csrf_token }}
+      <div class="container">        
+        <div class="row justify-content-center">
+          <div class="col-md-6 bg-light rounded p-3">
+            <!-- Froën -->
+            <div class="row">
+              {% for question_id, question_text in questions.items() %}
+              <div class="col-md-12 ms-1 form-check form-switch form-check-reverse">
+                  <input class="form-check-input" type="checkbox" id="{{question_id}}" name="{{question_id}}">
+                  <p class="text-justify">{{question_text}}</p>
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 text-center">
+                {{ form_questions.submit_4(class_="btn bg-scoutYellow")}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
 </div>
 {% endblock %}

@@ -11,7 +11,7 @@ from flaskr.auth import login_required
 
 from .helpers.form_helpers import form_filled_in
 
-from flaskr.forms import userForm, tutorForm, urgentForm
+from flaskr.forms import userForm, tutorForm, urgentForm, questionsForm
 
 from .mail import mail
 
@@ -102,10 +102,19 @@ def contact():
     form_user = userForm()
     form_tutor = tutorForm()
     form_urgent = urgentForm()
+    form_questions = questionsForm()
+    
+    # Define questions to ask user for approval
+    questions = {
+        "pictures": "Ech sin domat averstanen, dass vu mengem Kand Fotoe gemaach gin.",
+        "social_media": "Ech sin domat averstanen, dass Fotoen, déi am Laf vu (Gruppen)Aktivitéiten vu mengem Kand gemach gin, op de soziale Medien (Facebook) vum Käler Scoutsgrupp gedeelt kenne gin.",
+        "contact": "Ech sin domat averstanen, dass meng Email Adress an Telefonsnummer benotzt gin, fir vun de Cheffe kontaktéiert ze gin.",
+        "home_alone": "Mäi Kand dierf no der Versammlung eleng heem goen."
+    }
     
     # Concatenate forms and corresponding submit buttons (as defined in forms.py)
-    forms = [form_user, form_tutor, form_urgent]
-    submit_buttons = ["submit_1", "submit_2", "submit_3"]
+    forms = [form_user, form_tutor, form_urgent, form_questions]
+    submit_buttons = ["submit_1", "submit_2", "submit_3", "submit_4"]
     
     # Post request logic
     if request.method == "POST":
@@ -117,7 +126,8 @@ def contact():
                     print("Valid form")
                     print(form.name + "_data")
                     session[form.name + "_data"] = form.data
-                    # Check if the valid form is the last one
+                    print(session[form.name + "_data"])
+                    # Check if the valid form is the last one (i.e empty redirect field)
                     if form.redirect_tab == "":
                         # Database logic
                         
@@ -133,13 +143,13 @@ def contact():
                         return redirect(url_for("index.index"))
                     # If not last form, redirect to next
                     else:
-                        return render_template("index/test.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, 
+                        return render_template("index/test.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, form_questions=form_questions, questions=questions,
                                                                                 user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"])
                 
                 # if form invalid, render same html but fill in fields with data that has already been entered
                 else:
                     print(form.name)
-                    return render_template("index/test.html", active_tab=form.tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, 
+                    return render_template("index/test.html", active_tab=form.tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, form_questions=form_questions, questions=questions,
                                                                                     user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"])
                 
                     
@@ -170,4 +180,4 @@ def contact():
                                                                                     user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data=session["urgent_data"])
                  """
     if request.method == "GET":
-        return render_template("index/test.html", active_tab="form-user", form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"])
+        return render_template("index/test.html", active_tab="form-user", form_questions=form_questions, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"], questions=questions)

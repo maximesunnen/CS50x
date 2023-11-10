@@ -64,6 +64,18 @@ class urgentForm(FlaskForm):
     
     tab = "form-urgent"
     name = "form_urgent"
+    redirect_tab = "form-questions"
+    
+class questionsForm(FlaskForm):
+    pictures = BooleanField("Pictures")
+    social_media = BooleanField("Social Media")
+    contact = BooleanField("Contact")
+    home_alone = BooleanField("Home Alone")
+    
+    submit_4 = SubmitField("Umellen")
+    
+    tab = "form-questions"
+    name = "form_questions"
     redirect_tab = ""
 
     
