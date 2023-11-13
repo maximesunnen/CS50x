@@ -45,55 +45,12 @@ def index():
     # A test, I will have to create an html file that EXTENDS base.html to show actual content on the website
     return render_template("index/index.html", branches=branches)
 
-@bp.route("/apply", methods=["GET", "POST"])
+@bp.route("/contact", methods=["GET", "POST"])
 
 def apply():
-    # instantiate CourseForm() class; save instance in `form`
-    form = CourseForm()
-    
-    # validate_on_submit checks for POST request
-    if form.validate_on_submit():
-        
-        # Connect to database
-        db = get_db()
-        
-        # Add user to database
-        try:
-            db.execute("INSERT INTO user (first_name, last_name, birthday, gender, allergies, diet, branch, other_information) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                       (form.first_name.data.strip().upper(), form.last_name.data.strip().upper(), form.birthday.data, 
-                        form.gender.data.strip().upper(), form.allergies.data, form.diet.data, 
-                        form.branch.data.strip().upper(), form.other_information.data))
-        except db.IntegrityError:
-            flash("Feeler Code 100")
-            return redirect(url_for("index.index"))
-        
-        db.commit()
-        
-        # Send email with new application
-        from pandas import DataFrame
-        
-        msg = Message('Nei Umeldung bei den Wëllefcher', sender =   'peter@mailtrap.io', recipients = ['paul@mailtrap.io'])
-        
-        data = DataFrame([form.data])
+    return render_template("index/contact.html")
 
-        data.to_csv('flaskr/test.csv', index=False, encoding="utf-8")
-        
-        from flask import current_app
-        
-        with current_app.open_resource("test.csv") as fp:
-            msg.attach("test.csv", "text/csv", fp.read())
-            
-        mail.send(msg)
-        
-        return "Message sent!"
-        
-        # Redirect and flash message
-        flash("Dir gouft ugemellt!")
-        return redirect(url_for("index.index"))
-    
-    return render_template("index/wtforms-test.html", form=form)
-
-@bp.route("/contact", methods=["GET", "POST"])
+@bp.route("/apply", methods=["GET", "POST"])
 def contact():
     # Initialize session data
     for session_name in ["form_user_data", "form_tutor_data", "form_urgent_data"]:
@@ -186,6 +143,8 @@ def contact():
                         
                         # Email logic
                         from pandas import DataFrame
+                        from openpyxl import Workbook
+                        import os
                         
                         msg = Message('Nei Umeldung bei den Wëllefcher', sender='peter@mailtrap.io', recipients=['paul@mailtrap.io'])
                         
@@ -193,14 +152,21 @@ def contact():
                         
                         df = DataFrame([list_data], columns=["Virnumm", "Nonumm", "Gebuertsdatum", "Geschlecht", "Handynummer", "Branche", "Email", "Allergien", "Régime", "Aner Informatiounen", "Virnumm", "Noonumm", "Handynummer", "Email", "Virnumm", "Noonumm", "Handynummer", "Email", "Virnumm", "Noonumm", "Handynummer", "Email", "Fotoen", "Social Media", "Kontakt", "Aleng heem"])
 
-                        df.to_excel('flaskr/test.xlsx', index=False)
+                        # Create temporary xlsx file
+                        tmp_xlsx = Workbook()
+                        tmp_xlsx.save("flaskr/tmp.xlsx")
+                        
+                        df.to_excel('flaskr/tmp.xlsx', index=False)
                         
                         from flask import current_app
                         
-                        with open("flaskr/test.xlsx", "rb") as fp:
-                            msg.attach("test.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fp.read().decode("iso-8859-1"))
+                        with open("flaskr/tmp.xlsx", "rb") as fp:
+                            msg.attach("tmp.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fp.read())
 
                         mail.send(msg)
+                        
+                        # Remove temporary xlsx file
+                        os.remove("flaskr/tmp.xlsx")
                         
                         # Clear session information (functional improvement to make: store key name in form class)
                         for key in ["form_user_data", "form_tutor_data", "form_urgent_data"]:
@@ -212,13 +178,13 @@ def contact():
                     
                     # If not last form, redirect to next form
                     else:
-                        return render_template("index/test.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, form_questions=form_questions, questions=questions, session=session,
+                        return render_template("index/apply.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, form_questions=form_questions, questions=questions, session=session,
                                                                                 user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"])
                 
                 # invalid form: render same html, populate field entries with data already entered
                 else:
                     print(form.name)
-                    return render_template("index/test.html", active_tab=form.tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, form_questions=form_questions, questions=questions,
+                    return render_template("index/apply.html", active_tab=form.tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, form_questions=form_questions, questions=questions,
                                                                                     user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"])
     if request.method == "GET":
-        return render_template("index/test.html", active_tab="form-user", form_questions=form_questions, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"], questions=questions)
+        return render_template("index/apply.html", active_tab="form-user", form_questions=form_questions, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"], questions=questions)
