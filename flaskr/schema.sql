@@ -39,6 +39,14 @@ CREATE TABLE parent (
   email TEXT NOT NULL UNIQUE
 );
 
+CREATE TABLE emergency (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  phone_number TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE
+);
+
 -- Junction table with composite key
 /* 
 composite key: the combination of (parent_id, child_id) must be unique. For example (2,1) cannot be in the same table twice.
@@ -50,5 +58,13 @@ CREATE TABLE parent_child (
   child_id INTEGER NOT NULL,
   PRIMARY KEY (parent_id, child_id),
   FOREIGN KEY (parent_id) REFERENCES parent (id),
+  FOREIGN KEY (child_id) REFERENCES user (id)
+);
+
+CREATE TABLE emergency_child (
+  emergency_id INTEGER NOT NULL,
+  child_id INTEGER NOT NULL,
+  PRIMARY KEY (emergency_id, child_id),
+  FOREIGN KEY (emergency_id) REFERENCES emergency (id),
   FOREIGN KEY (child_id) REFERENCES user (id)
 );

@@ -171,6 +171,16 @@ def contact():
                             # Link second parent to child
                             db.execute("INSERT INTO parent_child (parent_id, child_id) VALUES (?, ?)", (parent_id_2[0], user_id[0]))
 
+                        # Add emergency contact to emergency table
+                        emergency = session["form_urgent_data"]
+                        db.execute("INSERT INTO emergency (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (emergency["first_name_3"].upper(), emergency["last_name_3"].upper(), emergency["number_3"], emergency["email_3"]))
+                        
+                        # Get if of emergency contact
+                        emergency_id = db.execute("SELECT id FROM emergency WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (emergency["first_name_3"].upper(), emergency["last_name_3"].upper(), emergency["number_3"], emergency["email_3"])).fetchone()
+                        
+                        # Link emergency contact to child
+                        db.execute("INSERT INTO emergency_child (emergency_id, child_id) VALUES (?, ?)", (emergency_id[0], user_id[0]))
+                        
                         # Commit database changes
                         db.commit()
                         
@@ -183,12 +193,12 @@ def contact():
                         
                         df = DataFrame([list_data], columns=["Virnumm", "Nonumm", "Gebuertsdatum", "Geschlecht", "Handynummer", "Branche", "Email", "Allergien", "Régime", "Aner Informatiounen", "Virnumm", "Noonumm", "Handynummer", "Email", "Virnumm", "Noonumm", "Handynummer", "Email", "Virnumm", "Noonumm", "Handynummer", "Email", "Fotoen", "Social Media", "Kontakt", "Aleng heem"])
 
-                        df.to_csv('flaskr/test.csv', index=False, encoding="utf-8")
+                        df.to_excel('flaskr/test.xlsx', index=False)
                         
                         from flask import current_app
                         
-                        with current_app.open_resource("test.csv") as fp:
-                            msg.attach("test.csv", "text/csv", fp.read())
+                        with open("flaskr/test.xlsx", "rb") as fp:
+                            msg.attach("test.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fp.read().decode("iso-8859-1"))
 
                         mail.send(msg)
                         
