@@ -17,6 +17,8 @@ from .mail import mail
 
 from flask_mail import Message
 
+from collections import OrderedDict
+
 bp = Blueprint("index", __name__)
 
 # This BP should handle ALL the routes that should be accessible to anyone, not only those with an account
@@ -96,7 +98,7 @@ def contact():
     # Initialize session data
     for session_name in ["form_user_data", "form_tutor_data", "form_urgent_data"]:
         if session.get(session_name) is None:
-            session[session_name] = {}
+            session[session_name] = OrderedDict()
 
     # Instantiate forms
     form_user = userForm()
@@ -112,72 +114,101 @@ def contact():
         "home_alone": "Mäi Kand dierf no der Versammlung eleng heem goen."
     }
     
-    # Concatenate forms and corresponding submit buttons (as defined in forms.py)
+    # Concatenate forms and corresponding submit buttons (see definition in forms.py)
     forms = [form_user, form_tutor, form_urgent, form_questions]
     submit_buttons = ["submit_1", "submit_2", "submit_3", "submit_4"]
     
-    # Post request logic
     if request.method == "POST":
+        # Loop through forms
         for form, submit_button in zip(forms, submit_buttons):
-            # Check which submit button has been pressed
+            # Check pressed submit button
             if getattr(form, submit_button).data:
                 # Check if form is valid
                 if form.validate():
-                    print("Valid form")
-                    print(form.name + "_data")
+                    # Save form data in session
                     session[form.name + "_data"] = form.data
-                    print(session[form.name + "_data"])
-                    # Check if the valid form is the last one (i.e empty redirect field)
+                    print(form.data)
+                    
+                    # Make list from form data for database insertion
+                    session[form.name + "_list"] = list(session[form.name + "_data"].values())
+                    print(session[form.name + "_list"])
+
+                    # Format birthday because of unexpected auto-formatting by WTForm (issue #2); also update the list
+                    if form.name == "form_user":
+                        session["form_user_data"]["birthday"] = session["form_user_data"]["birthday"].strftime("%Y-%m-%d")
+                        session["form_user_list"] = list(session["form_user_data"].values())
+                    
+                    # If last form (i.e empty redirect field)
                     if form.redirect_tab == "":
-                        # Database logic
+                        # Connect to database
+                        db = get_db()
                         
+                        # Add user to user table
+                        db.execute("INSERT INTO user (first_name, last_name, birthday, gender, number, branch, email, allergies, diet, other_information) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                   (*session["form_user_list"][:10],))
+                        
+                        # Get ID of added user
+                        user = session["form_user_data"]
+                        user_id = db.execute("SELECT id FROM user WHERE first_name = ? AND last_name = ? AND birthday = ?", (user["first_name"], user["last_name"], user["birthday"])).fetchone()
+                        
+                        # Add address to address table
+                        db.execute("INSERT INTO address (house_number, street, town, zip, country, user_id) VALUES (?, ?, ?, ?, ?, ?)", (user["house_number"], user["street"].upper(), user["town"].upper(), user["zip"], user["country"], user_id[0]))
+                        
+                        # Add first parent to parent table
+                        parent = session["form_tutor_data"]
+                        db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (parent["first_name_1"].upper(), parent["last_name_1"].upper(), parent["number_1"], parent["email_1"]))
+                        # Get id of first parent
+                        parent_id_1 = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (parent["first_name_1"].upper(), parent["last_name_1"].upper(), parent["number_1"], parent["email_1"])).fetchone()
+                        # Link first parent to child
+                        db.execute("INSERT INTO parent_child (parent_id, child_id) VALUES (?, ?)", (parent_id_1[0], user_id[0]))
+                        
+                        # Check if second parent submitted
+                        if parent["first_name_2"] != '':
+                            # Add second parent to parent table
+                            db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (parent["first_name_2"].upper(), parent["last_name_2"].upper(), parent["number_2"], parent["email_2"]))
+                            # Get id of second parent
+                            parent_id_2 = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (parent["first_name_2"].upper(), parent["last_name_2"].upper(), parent["number_2"], parent["email_2"])).fetchone()
+                            # Link second parent to child
+                            db.execute("INSERT INTO parent_child (parent_id, child_id) VALUES (?, ?)", (parent_id_2[0], user_id[0]))
+
                         # Commit database changes
+                        db.commit()
                         
                         # Email logic
+                        from pandas import DataFrame
                         
-                        # Clear session information (functional improvement to make: store this info in the form classes)
+                        msg = Message('Nei Umeldung bei den Wëllefcher', sender='peter@mailtrap.io', recipients=['paul@mailtrap.io'])
+                        
+                        list_data = session["form_user_list"][:10] + session["form_tutor_list"][:8] + session["form_urgent_list"][:4] + session["form_questions_list"][:4]
+                        
+                        df = DataFrame([list_data], columns=["Virnumm", "Nonumm", "Gebuertsdatum", "Geschlecht", "Handynummer", "Branche", "Email", "Allergien", "Régime", "Aner Informatiounen", "Virnumm", "Noonumm", "Handynummer", "Email", "Virnumm", "Noonumm", "Handynummer", "Email", "Virnumm", "Noonumm", "Handynummer", "Email", "Fotoen", "Social Media", "Kontakt", "Aleng heem"])
+
+                        df.to_csv('flaskr/test.csv', index=False, encoding="utf-8")
+                        
+                        from flask import current_app
+                        
+                        with current_app.open_resource("test.csv") as fp:
+                            msg.attach("test.csv", "text/csv", fp.read())
+
+                        mail.send(msg)
+                        
+                        # Clear session information (functional improvement to make: store key name in form class)
                         for key in ["form_user_data", "form_tutor_data", "form_urgent_data"]:
                             session.pop(key, default=None)
-                            
+
                         # Redirect to home page and flash success message
+                        flash("Dir gouft ugemellt!")
                         return redirect(url_for("index.index"))
-                    # If not last form, redirect to next
+                    
+                    # If not last form, redirect to next form
                     else:
-                        return render_template("index/test.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, form_questions=form_questions, questions=questions,
+                        return render_template("index/test.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, form_questions=form_questions, questions=questions, session=session,
                                                                                 user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"])
                 
-                # if form invalid, render same html but fill in fields with data that has already been entered
+                # invalid form: render same html, populate field entries with data already entered
                 else:
                     print(form.name)
                     return render_template("index/test.html", active_tab=form.tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, form_questions=form_questions, questions=questions,
                                                                                     user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"])
-                
-                    
-    """ if request.method == "POST":
-        if form_user.submit_1.data:
-            if form_user.validate():
-                session["user_data"] = form_user.data
-                return render_template("index/test.html", active_tab="form-tutor", form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, 
-                                                                                    user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data=session["urgent_data"])
-            else:
-                return render_template("index/test.html", active_tab="form-user", form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data=session["urgent_data"])
-        
-        if form_tutor.submit_2.data:
-            if form_tutor.validate():
-                session["tutor_data"] = form_tutor.data
-                return render_template("index/test.html", active_tab="form-urgent", form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent,
-                                                                                    user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data=session["urgent_data"])
-            else:
-                return render_template("index/test.html", active_tab="form-tutor", form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent,
-                                                                                    user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data=session["urgent_data"])
-            
-        if form_urgent.submit_3.data:
-            if form_urgent.validate():
-                session["urgent_data"] = form_urgent.data
-                return redirect(url_for("index.index"))
-            else:
-                return render_template("index/test.html", active_tab="form-urgent", form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, 
-                                                                                    user_data=session["user_data"], tutor_data=session["tutor_data"], urgent_data=session["urgent_data"])
-                 """
     if request.method == "GET":
         return render_template("index/test.html", active_tab="form-user", form_questions=form_questions, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, user_data=session["form_user_data"], tutor_data=session["form_tutor_data"], urgent_data=session["form_urgent_data"], questions=questions)

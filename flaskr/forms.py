@@ -20,6 +20,9 @@ class userForm(FlaskForm):
     number = IntegerField('Handynummer', validators=[InputRequired()])
     branch = SelectField("Branche", choices=["Wëllefcher"], default="Wëllefcher")
     email = EmailField('Email')
+    allergies = StringField("Ech hun Allergien op ...")
+    diet = StringField("Ech hun e speziellen Régime ...")
+    other_information = TextAreaField("Aner Informatiounen iwwert mech ...")
     
     house_number = StringField('Hausnummer', validators=[InputRequired()])
     street = StringField('Strooss', validators=[InputRequired()])
@@ -27,9 +30,6 @@ class userForm(FlaskForm):
     zip = IntegerField('Postleitzuel', validators=[InputRequired()])
     country = SelectField('Land', choices=["Luxembourg", "Belgique", "France", "Deutschland"], default="Luxembourg", validators=[InputRequired()])
     
-    allergies = StringField("Ech hun Allergien op ...")
-    diet = StringField("Ech hun e speziellen Régime ...")
-    other_information = TextAreaField("Aner Informatiounen iwwert mech ...")
     
     submit_1 = SubmitField("Weider")
     

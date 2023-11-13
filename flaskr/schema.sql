@@ -6,17 +6,16 @@ DROP TABLE IF EXISTS parent_child;
 -- Table to store user (child) information
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT UNIQUE NOT NULL,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
-  password TEXT NOT NULL,
+  number TEXT,
+  email TEXT,
   birthday DATE NOT NULL,
   gender TEXT NOT NULL,
   allergies TEXT,
   diet TEXT,
   branch TEXT,
-  otherInformation TEXT,
-  scout_registration TEXT DEFAULT 'FALSE'
+  other_information TEXT
 );
 
 -- Table to store the address of the user

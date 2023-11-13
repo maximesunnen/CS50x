@@ -69,7 +69,7 @@
               <div class="col-md-4">
                 <!-- Birthday -->
                 {% if user_data["birthday"] %}
-                  {{ form_user.birthday(class_="form-control", value=user_data["birthday"]) }}
+                  <input class="form-control" id="birthday" name="birthday" type="date" value={{user_data["birthday"]}}>
                 {% else %}
                   {{ form_user.birthday(class_="form-control") }}
                 {% endif %}
