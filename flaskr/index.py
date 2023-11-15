@@ -112,12 +112,16 @@ def contact():
                             db.execute("INSERT INTO address (house_number, street, town, zip, country, user_id) VALUES (?, ?, ?, ?, ?, ?)", (user["house_number"], user["street"].upper(), user["town"].upper(), user["zip"], user["country"], user_id[0]))
                         except db.IntegrityError:
                             flash("E Feeler ass opgetrueden. Feeler Code 102.")
+
                         # Add first parent to parent table
                         parent = session["form_tutor_data"]
-                        try:
-                            db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (parent["first_name_1"].upper(), parent["last_name_1"].upper(), parent["number_1"], parent["email_1"]))
-                        except db.IntegrityError:
-                            flash("E Feeler ass opgetrueden. Feeler Code 103.")
+                        # Check if parent exists
+                        exists = db.execute("SELECT id FROM parent WHERE phone_number = ? AND email = ?", (parent["number_1"], parent["email_1"])).fetchone()
+                        if exists is None:
+                            try:
+                                db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (parent["first_name_1"].upper(), parent["last_name_1"].upper(), parent["number_1"], parent["email_1"]))
+                            except db.IntegrityError:
+                                flash("E Feeler ass opgetrueden. Feeler Code 103.")
                         # Get id of first parent
                         try:
                             parent_id_1 = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (parent["first_name_1"].upper(), parent["last_name_1"].upper(), parent["number_1"], parent["email_1"])).fetchone()
@@ -125,11 +129,15 @@ def contact():
                             flash("E Feeler ass opgetrueden. Feeler Code 104.")
                         # Add emergency contact to emergency table
                         emergency = session["form_urgent_data"]
-                        try:
-                            db.execute("INSERT INTO emergency (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (emergency["first_name_3"].upper(), emergency["last_name_3"].upper(), emergency["number_3"], emergency["email_3"]))
-                        except db.IntegrityError:
-                            flash("E Feeler ass opgetrueden. Feeler Code 105.")
-                        # Get if of emergency contact
+                        # Check if emergency contact exists
+                        exists = db.execute("SELECT id FROM emergency WHERE phone_number = ? AND email = ?", (emergency["number_3"], emergency["email_3"])).fetchone()
+                        if exists is None:
+                            print("executing")
+                            try:
+                                db.execute("INSERT INTO emergency (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (emergency["first_name_3"].upper(), emergency["last_name_3"].upper(), emergency["number_3"], emergency["email_3"]))
+                            except db.IntegrityError:
+                                flash("E Feeler ass opgetrueden. Feeler Code 105.")
+                        # Get id of emergency contact
                         emergency_id = db.execute("SELECT id FROM emergency WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (emergency["first_name_3"].upper(), emergency["last_name_3"].upper(), emergency["number_3"], emergency["email_3"])).fetchone()
                         # Link first parent-child-emergency contact
                         try:
@@ -139,11 +147,14 @@ def contact():
                             
                         # Check if second parent submitted
                         if parent["first_name_2"] != '':
-                            # Add second parent to parent table
-                            try:
-                                db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (parent["first_name_2"].upper(), parent["last_name_2"].upper(), parent["number_2"], parent["email_2"]))
-                            except db.IntegrityError:
-                                flash("E Feeler ass opgetrueden. Feeler Code 107.")
+                            # Check if second parent exists
+                            exists = db.execute("SELECT id FROM parent WHERE phone_number = ? AND email = ?", (parent["number_2"], parent["email_2"])).fetchone()
+                            if exists is None:
+                                # Add second parent to parent table
+                                try:
+                                    db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (parent["first_name_2"].upper(), parent["last_name_2"].upper(), parent["number_2"], parent["email_2"]))
+                                except db.IntegrityError:
+                                    flash("E Feeler ass opgetrueden. Feeler Code 107.")
                             # Get id of second parent
                             parent_id_2 = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (parent["first_name_2"].upper(), parent["last_name_2"].upper(), parent["number_2"], parent["email_2"])).fetchone()
                             # Link second parent-child-emergency contact
