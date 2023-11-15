@@ -41,12 +41,19 @@ def create_app(test_config=None):
     
     
     # Flask-Mail configuration
-    app.config['MAIL_SERVER']='sandbox.smtp.mailtrap.io'
-    app.config['MAIL_PORT'] = 2525
-    app.config['MAIL_USERNAME'] = 'bda6faffb09416'
-    app.config['MAIL_PASSWORD'] = 'c0e18111684897'
-    app.config['MAIL_USE_TLS'] = True
-    app.config['MAIL_USE_SSL'] = False
+    import socket
+
+    import configparser
+
+    config = configparser.ConfigParser()
+    config.read('flaskr/config.ini')
+
+    app.config['MAIL_SERVER'] = config.get('DEFAULT', 'MAIL_SERVER')
+    app.config['MAIL_PORT'] = config.getint('DEFAULT', 'MAIL_PORT')
+    app.config['MAIL_USERNAME'] = config.get('DEFAULT', 'MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = config.get('DEFAULT', 'MAIL_PASSWORD')
+    app.config['MAIL_USE_TLS'] = config.getboolean('DEFAULT', 'MAIL_USE_TLS', fallback=True)
+    app.config['MAIL_USE_SSL'] = config.getboolean('DEFAULT', 'MAIL_USE_SSL', fallback=False)
 
     # import mail from mail.py
     from .mail import mail
