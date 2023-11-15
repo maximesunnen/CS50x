@@ -1,7 +1,6 @@
 # File contains the application factory && tells Python that flaskr is a "package"
 
 import os
-
 from flask import Flask
 
 
@@ -30,8 +29,8 @@ def create_app(test_config=None):
     db.init_app(app)
     
     # Register auth blueprint
-    from . import auth  # this command EXECUTES code inside auth.py
-    app.register_blueprint(auth.bp)
+    """ from . import auth  # this command EXECUTES code inside auth.py
+    app.register_blueprint(auth.bp) """
     
     # Register index blueprint
     from . import index
