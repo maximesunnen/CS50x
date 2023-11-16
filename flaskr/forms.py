@@ -30,25 +30,31 @@ class userForm(FlaskForm):
     zip = IntegerField('Postleitzuel', validators=[InputRequired()])
     country = SelectField('Land', choices=["Luxembourg", "Belgique", "France", "Deutschland"], default="Luxembourg", validators=[InputRequired()])
     
-    
     submit_1 = SubmitField("Weider")
+    
+    field_names_scout = ["first_name", "last_name", "birthday", "gender", "number", "branch", "email", "house_number", "street", "town", "zip", "country", "allergies", "diet", "other_information"]
     
     tab = "form-user"
     name = "form_user"
     redirect_tab = "form-tutor"
     
 class tutorForm(FlaskForm):
+    # First tutor
     first_name_1 = StringField('Virnumm', validators=[InputRequired()])
     last_name_1 = StringField('Numm', validators=[InputRequired()])
     number_1 = StringField('Handynummer', validators=[InputRequired()])
     email_1 = EmailField('Email', validators=[InputRequired(), Email()])
     
+    # Second tutor
     first_name_2 = StringField('Virnumm')
     last_name_2 = StringField('Numm')
     number_2 = StringField('Handynummer')
     email_2 = EmailField('Email')
     
     submit_2 = SubmitField("Weider")
+    
+    field_names_tutor_1 = ["first_name_1", "last_name_1", "number_1", "email_1"]
+    field_names_tutor_2 = ["first_name_2", "last_name_2", "number_2", "email_2"]
     
     tab = "form-tutor"
     name = "form_tutor"
@@ -61,6 +67,8 @@ class urgentForm(FlaskForm):
     email_3 = EmailField('Email', validators=[InputRequired(), Email()])
     
     submit_3 = SubmitField("Weider")
+    
+    field_names_emergency = ["first_name_3", "last_name_3", "number_3", "email_3"]
     
     tab = "form-urgent"
     name = "form_urgent"
