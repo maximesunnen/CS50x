@@ -34,8 +34,8 @@
             <div class="row mb-2">
               <div class="col-md-4">
                   <!-- First name -->
-                  {% if user_data["first_name"] %}
-                    {{ form_user.first_name(class_="form-control", value=user_data["first_name"]) }}
+                  {% if user_data.first_name %}
+                    {{ form_user.first_name(class_="form-control", value=user_data.first_name) }}
                   {% else %}
                     {{ form_user.first_name(class_="form-control", placeholder="Virnumm*") }}
                   {% endif %}
@@ -51,8 +51,8 @@
 
               <div class="col-md-4">
                 <!-- Last name -->
-                {% if user_data["last_name"] %}
-                  {{ form_user.last_name(class_="form-control", value=user_data["last_name"]) }}
+                {% if user_data.last_name %}
+                  {{ form_user.last_name(class_="form-control", value=user_data.last_name) }}
                 {% else %}
                   {{ form_user.last_name(class_="form-control", placeholder="Nonumm*") }}
                 {% endif %}
@@ -68,8 +68,8 @@
 
               <div class="col-md-4">
                 <!-- Birthday -->
-                {% if user_data["birthday"] %}
-                  <input class="form-control" id="birthday" name="birthday" type="date" value={{user_data["birthday"]}}>
+                {% if user_data.birthday %}
+                  <input class="form-control" id="birthday" name="birthday" type="date" value={{user_data.birthday}}>
                 {% else %}
                   {{ form_user.birthday(class_="form-control") }}
                 {% endif %}
@@ -87,15 +87,15 @@
             <div class="row mb-2">
               <div class="col-md-4">
                 <!-- Gender -->
-                {% if user_data["gender"] %}
+                {% if user_data.gender %}
                 <div class="form-group">
                   <div class="form-control">
                     <div>
-                      <input id="male" name="gender" type="radio" value="Männlech" {% if user_data["gender"] == "Männlech" %} checked {% else %} {% endif %}>
+                      <input id="male" name="gender" type="radio" value="Männlech" {% if user_data.gender == "Männlech" %} checked {% else %} {% endif %}>
                       <label class="form-check-label" for="male">Männlech</label>
                     </div>
                     <div>
-                      <input id="female" name="gender" type="radio" value="Weiblech" {% if user_data["gender"] == "Weiblech" %} checked {% else %} {% endif %}>
+                      <input id="female" name="gender" type="radio" value="Weiblech" {% if user_data.gender == "Weiblech" %} checked {% else %} {% endif %}>
                       <label class="form-check-label" for="female">Weiblech</label>
                     </div>
                   </div>
@@ -108,8 +108,8 @@
 
               <div class="col-md-4">
                 <!-- Number -->
-                {% if user_data["number"] %}
-                  {{ form_user.number(class_="form-control", value=user_data["number"]) }}
+                {% if user_data.number %}
+                  {{ form_user.number(class_="form-control", value=user_data.number) }}
                 {% else %}
                   {{ form_user.number(class_="form-control", placeholder="Handynummer") }}
                 {% endif %}
@@ -125,8 +125,8 @@
 
               <div class="col-md-4">
                 <!-- Branch -->
-                {% if user_data["branch"] %}
-                  {{ form_user.branch(class_="form-select", value=user_data["branch"]) }}
+                {% if user_data.branch %}
+                  {{ form_user.branch(class_="form-select", value=user_data.branch) }}
                 {% else %}
                   {{ form_user.branch(class_="form-select") }}
                 {% endif %}
@@ -136,8 +136,8 @@
             <!-- Email -->
             <div class="row mb-2">
               <div class="col-md-6">
-                {% if user_data["email"] %}
-                  {{ form_user.email(class_="form-control", value=user_data["email"]) }}
+                {% if user_data.email %}
+                  {{ form_user.email(class_="form-control", value=user_data.email) }}
                 {% else %}
                   {{ form_user.email(class_="form-control", placeholder="Email") }}
                 {% endif %}
@@ -147,8 +147,8 @@
             <!-- House number -->
             <div class="row mb-2">
               <div class="col-md-2">
-                {% if user_data["house_number"] %}
-                  {{ form_user.house_number(class_="form-control", value=user_data["house_number"]) }}
+                {% if user_data.house_number %}
+                  {{ form_user.house_number(class_="form-control", value=user_data.house_number) }}
                 {% else %}
                   {{ form_user.house_number(class_="form-control", placeholder="Nr.*") }}
                 {% endif %}
@@ -164,8 +164,8 @@
 
             <!-- Street -->
               <div class="col-md-5">
-                {% if user_data["street"] %}
-                  {{ form_user.street(class_="form-control", value=user_data["street"]) }}
+                {% if user_data.street %}
+                  {{ form_user.street(class_="form-control", value=user_data.street) }}
                 {% else %}
                   {{ form_user.street(class_="form-control", placeholder="Strooss*") }}
                 {% endif %}
@@ -181,8 +181,8 @@
 
             <!-- Town -->
               <div class="col-md-5">
-                {% if user_data["town"] %}
-                  {{ form_user.town(class_="form-control", value=user_data["town"]) }}
+                {% if user_data.town %}
+                  {{ form_user.town(class_="form-control", value=user_data.town) }}
                 {% else %}
                   {{ form_user.town(class_="form-control", placeholder="Uertschaft*") }}
                 {% endif %}
@@ -201,8 +201,8 @@
             <div class="row mb-2">
               <!-- Zip -->
               <div class="col-md-2">
-                {% if user_data["zip"] %}
-                  {{ form_user.zip(class_="form-control", value=user_data["zip"]) }}
+                {% if user_data.zip %}
+                  {{ form_user.zip(class_="form-control", value=user_data.zip) }}
                 {% else %}
                   {{ form_user.zip(class_="form-control", placeholder="Plz*") }}
                 {% endif %}
@@ -218,8 +218,8 @@
 
               <!-- Country -->
               <div class="col-md-5">
-                {% if user_data["country"] %}
-                  {{ form_user.country(class_="form-control", value=user_data["country"]) }}
+                {% if user_data.country %}
+                  {{ form_user.country(class_="form-control", value=user_data.country) }}
                 {% else %}
                   {{ form_user.country(class_="form-control", placeholder="Land") }}
                 {% endif %}
@@ -237,8 +237,8 @@
             <div class="row mt-5">
               <div class="col-md-12 mb-2">
                 <!-- Allergies -->
-                {% if user_data["allergies"] %}
-                  {{ form_user.allergies(class_="form-control", value=user_data["allergies"]) }}
+                {% if user_data.allergies %}
+                  {{ form_user.allergies(class_="form-control", value=user_data.allergies) }}
                 {% else %}
                   {{ form_user.allergies(class_="form-control", placeholder="Ech hun Allergien op ...") }}
                 {% endif %}
@@ -246,8 +246,8 @@
 
               <div class="col-md-12 mb-2">
                 <!-- Diet -->
-                {% if user_data["diet"] %}
-                  {{ form_user.diet(class_="form-control", value=user_data["diet"]) }}
+                {% if user_data.diet %}
+                  {{ form_user.diet(class_="form-control", value=user_data.diet) }}
                 {% else %}
                   {{ form_user.diet(class_="form-control", placeholder="Ech hun e spezielle Régime ...") }}
                 {% endif %}
@@ -255,8 +255,8 @@
 
               <!-- Other Information -->
               <div class="col-md-12">
-                {% if user_data["other_information"] %}
-                  <textarea id="other_information" class="form-control" name="other_information">{{  user_data["other_information"] }}</textarea>
+                {% if user_data.other %}
+                  <textarea id="other_information" class="form-control" name="other_information">{{  user_data.other }}</textarea>
                 {% else %}
                   {{ form_user.other_information(class_="form-control", placeholder="Aner Informatiounen iwert mech ...") }}
                 {% endif %}
@@ -287,8 +287,8 @@
             <div class="row mb-2 mb-2">
               <div class="col-md-4">
                 <!-- First name -->
-                {% if tutor_data["first_name_1"] %}
-                  {{ form_tutor.first_name_1(class_="form-control", value=tutor_data["first_name_1"]) }}
+                {% if tutor_1_data.first_name %}
+                  {{ form_tutor.first_name_1(class_="form-control", value=tutor_1_data.first_name) }}
                 {% else %}
                   {{ form_tutor.first_name_1(placeholder="Virnumm*", class_="form-control") }}
                 {% endif %}
@@ -304,8 +304,8 @@
 
               <div class="col-md-4">
                 <!-- Last name -->
-                {% if tutor_data["last_name_1"] %}
-                  {{ form_tutor.last_name_1(class_="form-control", value=tutor_data["last_name_1"]) }}
+                {% if tutor_1_data.last_name %}
+                  {{ form_tutor.last_name_1(class_="form-control", value=tutor_1_data.last_name) }}
                 {% else %}
                   {{ form_tutor.last_name_1(placeholder="Nonumm*", class_="form-control") }}
                 {% endif %}
@@ -321,8 +321,8 @@
 
               <div class="col-md-4">
                 <!-- Number -->
-                {% if tutor_data["number_1"] %}
-                  {{ form_tutor.number_1(class_="form-control", value=tutor_data["number_1"]) }}
+                {% if tutor_1_data.number %}
+                  {{ form_tutor.number_1(class_="form-control", value=tutor_1_data.number) }}
                 {% else %}
                   {{ form_tutor.number_1(placeholder="Nummer*", class_="form-control") }}
                 {% endif %}
@@ -339,8 +339,8 @@
             <div class="row mb-2">
               <div class="col-md-8">
                 <!-- Email -->
-                {% if tutor_data["email_1"] %}
-                  {{ form_tutor.email_1(class_="form-control", value=tutor_data["email_1"]) }}
+                {% if tutor_1_data.email %}
+                  {{ form_tutor.email_1(class_="form-control", value=tutor_1_data.email) }}
                 {% else %}
                   {{ form_tutor.email_1(placeholder="Email*", class_="form-control") }}
                 {% endif %}
@@ -359,8 +359,8 @@
             <div class="row mb-2">
               <div class="col-md-4">
                 <!-- First name -->
-                {% if tutor_data["first_name_2"] %}
-                  {{ form_tutor.first_name_2(class_="form-control", value=tutor_data["first_name_2"]) }}
+                {% if tutor_2_data.first_name %}
+                  {{ form_tutor.first_name_2(class_="form-control", value=tutor_2_data.first_name) }}
                 {% else %}
                   {{ form_tutor.first_name_2(placeholder="Virnumm", class_="form-control") }}
                 {% endif %}
@@ -375,8 +375,8 @@
 
               <div class="col-md-4">
                 <!-- Last name -->
-                {% if tutor_data["last_name_2"] %}
-                  {{ form_tutor.last_name_2(class_="form-control", value=tutor_data["last_name_2"]) }}
+                {% if tutor_2_data.last_name %}
+                  {{ form_tutor.last_name_2(class_="form-control", value=tutor_2_data.last_name) }}
                 {% else %}
                   {{ form_tutor.last_name_2(placeholder="Nonumm", class_="form-control") }}
                 {% endif %}
@@ -391,8 +391,8 @@
 
               <div class="col-md-4">
                 <!-- Number -->
-                {% if tutor_data["number_2"] %}
-                  {{ form_tutor.number_2(class_="form-control", value=tutor_data["number_2"]) }}
+                {% if tutor_2_data.number %}
+                  {{ form_tutor.number_2(class_="form-control", value=tutor_2_data.number) }}
                 {% else %}
                   {{ form_tutor.number_2(placeholder="Nummer", class_="form-control") }}
                 {% endif %}
@@ -408,8 +408,8 @@
             <div class="row mb-2">
               <div class="col-md-8">
                 <!-- Email -->
-                {% if tutor_data["email_2"] %}
-                  {{ form_tutor.email_2(class_="form-control", value=tutor_data["email_2"]) }}
+                {% if tutor_2_data.email %}
+                  {{ form_tutor.email_2(class_="form-control", value=tutor_2_data.email) }}
                 {% else %}
                   {{ form_tutor.email_2(placeholder="Email", class_="form-control") }}
                 {% endif %}
