@@ -28,6 +28,11 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
     
+    # Use custom encoder
+    from .classes import CustomEncoder
+    
+    app.json_encoder = CustomEncoder
+    
     # Register auth blueprint
     """ from . import auth  # this command EXECUTES code inside auth.py
     app.register_blueprint(auth.bp) """
