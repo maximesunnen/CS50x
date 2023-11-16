@@ -3,15 +3,19 @@ import functools
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-from werkzeug.security import check_password_hash, generate_password_hash
-from flaskr.db import get_db
+#from werkzeug.security import check_password_hash, generate_password_hash
 #from flaskr.auth import login_required
-from .helpers.form_helpers import form_filled_in
+from flaskr.db import get_db
 from flaskr.forms import ScoutForm, TutorForm, EmergencyForm, QuestionsForm
-from .mail import mail
-from flask_mail import Message
 from collections import OrderedDict
 from .classes import Scout, Tutor
+
+# Email imports
+from .mail import mail
+from flask_mail import Message
+from pandas import DataFrame
+from openpyxl import Workbook
+import os
 
 bp = Blueprint("index", __name__)
 
