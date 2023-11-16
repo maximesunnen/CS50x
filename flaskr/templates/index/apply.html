@@ -7,16 +7,16 @@
     <div class="col-md-6 my-3">
       <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
-            <button {% if active_tab == 'form-user' %} class="nav-link active" {% else %} class="nav-link" {% endif %} id="user-tab" data-bs-toggle="tab" data-bs-target="#user" type="button" role="tab">Coordonneeën</button>
+            <button {% if active_tab == 'form_user' %} class="nav-link active" {% else %} class="nav-link" {% endif %} id="user-tab" data-bs-toggle="tab" data-bs-target="#user" type="button" role="tab">Coordonneeën</button>
           </li>
           <li class="nav-item" role="presentation">
-            <button {% if active_tab == "form-tutor" %} class="nav-link active" {% else %} class="nav-link" {% endif %} id="tutor-tab" data-bs-toggle="tab" data-bs-target="#tutor" type="button" role="tab">Tuteurs</button>
+            <button {% if active_tab == "form_tutor" %} class="nav-link active" {% else %} class="nav-link" {% endif %} id="tutor-tab" data-bs-toggle="tab" data-bs-target="#tutor" type="button" role="tab">Tuteurs</button>
           </li>
           <li class="nav-item" role="presentation">
-            <button {% if active_tab == "form-urgent" %} class="nav-link active" {% else %} class="nav-link" {% endif %} id="urgent-tab" data-bs-toggle="tab" data-bs-target="#urgent" type="button" role="tab">Noutfall</button>
+            <button {% if active_tab == "form_emergency" %} class="nav-link active" {% else %} class="nav-link" {% endif %} id="urgent-tab" data-bs-toggle="tab" data-bs-target="#urgent" type="button" role="tab">Noutfall</button>
           </li>
           <li class="nav-item" role="presentation">
-            <button {% if active_tab == "form-questions" %} class="nav-link active" {% else %} class="nav-link" {% endif %} id="questions-tab" data-bs-toggle="tab" data-bs-target="#questions" type="button" role="tab">Froën</button>
+            <button {% if active_tab == "form_questions" %} class="nav-link active" {% else %} class="nav-link" {% endif %} id="questions-tab" data-bs-toggle="tab" data-bs-target="#questions" type="button" role="tab">Froën</button>
           </li>
       </ul>
     </div>
@@ -25,7 +25,7 @@
 
 <div class="tab-content" id="myTabContent">
   <!-- Tab: User -->
-  <div class="tab-pane fade {% if active_tab == 'form-user' %} show active {% endif %}" id="user" role="tabpanel">
+  <div class="tab-pane fade {% if active_tab == 'form_user' %} show active {% endif %}" id="user" role="tabpanel">
     <form method="POST" action="{{ url_for('index.contact') }}" class="text-center" novalidate>
       {{ form_user.csrf_token }}
       <div class="container">        
@@ -276,7 +276,7 @@
   </div>
 
   <!-- Tab: Tuteurs -->
-  <div class="tab-pane {% if active_tab == 'form-tutor' %} show active {% endif %} " id="tutor" role="tabpanel">
+  <div class="tab-pane {% if active_tab == 'form_tutor' %} show active {% endif %} " id="tutor" role="tabpanel">
     <form action="{{ url_for('index.contact') }}" method="post" novalidate>
       {{ form_tutor.csrf_token }}
       <div class="container">
@@ -436,9 +436,9 @@
     </form>
   </div>
 
-  <div class="tab-pane fade {% if active_tab == 'form-urgent' %} show active {% endif %}" id="urgent" role="tabpanel">
+  <div class="tab-pane fade {% if active_tab == 'form_emergency' %} show active {% endif %}" id="urgent" role="tabpanel">
     <form method="POST" action="{{ url_for('index.contact') }}" class="text-center" novalidate>
-      {{ form_urgent.csrf_token }}
+      {{ form_emergency.csrf_token }}
       <div class="container">        
         <div class="row justify-content-center">
           <div class="col-md-6 bg-light rounded p-2">
@@ -447,14 +447,14 @@
               <div class="col-md-4">
                 <!-- First name -->
                 {% if urgent_data["first_name_3"] %}
-                  {{ form_urgent.first_name_3(class_="form-control", value=urgent_data["first_name_3"]) }}
+                  {{ form_emergency.first_name_3(class_="form-control", value=urgent_data["first_name_3"]) }}
                 {% else %}
-                  {{ form_urgent.first_name_3(class_="form-control", placeholder="Virnumm*") }}
+                  {{ form_emergency.first_name_3(class_="form-control", placeholder="Virnumm*") }}
                 {% endif %}
 
-                {% if form_urgent.first_name_3.errors %}
+                {% if form_emergency.first_name_3.errors %}
                 <ul class="errors">
-                  {% for error in form_urgent.first_name_3.errors %}
+                  {% for error in form_emergency.first_name_3.errors %}
                     <li class="txt-scoutGreen">{{ error }}</li>
                   {% endfor %}
                 </ul>
@@ -464,14 +464,14 @@
               <div class="col-md-4">
                 <!-- Last name -->
                 {% if urgent_data["last_name_3"] %}
-                  {{ form_urgent.last_name_3(class_="form-control", value=urgent_data["last_name_3"]) }}
+                  {{ form_emergency.last_name_3(class_="form-control", value=urgent_data["last_name_3"]) }}
                 {% else %}
-                  {{ form_urgent.last_name_3(class_="form-control", placeholder="Nonumm*") }}
+                  {{ form_emergency.last_name_3(class_="form-control", placeholder="Nonumm*") }}
                 {% endif %}
 
-                {% if form_urgent.last_name_3.errors %}
+                {% if form_emergency.last_name_3.errors %}
                   <ul class="errors">
-                    {% for error in form_urgent.last_name_3.errors %}
+                    {% for error in form_emergency.last_name_3.errors %}
                       <li class="txt-scoutGreen">{{ error }}</li>
                     {% endfor %}
                   </ul>
@@ -481,14 +481,14 @@
               <div class="col-md-4">
                 <!-- Number -->
                 {% if urgent_data["number_3"] %}
-                  {{ form_urgent.number_3(class_="form-control", value=urgent_data["number_3"]) }}
+                  {{ form_emergency.number_3(class_="form-control", value=urgent_data["number_3"]) }}
                 {% else %}
-                  {{ form_urgent.number_3(class_="form-control", placeholder="Nummer*") }}
+                  {{ form_emergency.number_3(class_="form-control", placeholder="Nummer*") }}
                 {% endif %}
 
-                {% if form_urgent.number_3.errors %}
+                {% if form_emergency.number_3.errors %}
                   <ul class="errors">
-                    {% for error in form_urgent.number_3.errors %}
+                    {% for error in form_emergency.number_3.errors %}
                       <li class="txt-scoutGreen">{{ error }}</li>
                     {% endfor %}
                   </ul>
@@ -500,14 +500,14 @@
               <div class="col-md-8">
                 <!-- Number -->
                 {% if urgent_data["email_3"] %}
-                  {{ form_urgent.email_3(class_="form-control", value=urgent_data["email_3"]) }}
+                  {{ form_emergency.email_3(class_="form-control", value=urgent_data["email_3"]) }}
                 {% else %}
-                  {{ form_urgent.email_3(class_="form-control", placeholder="Email*") }}
+                  {{ form_emergency.email_3(class_="form-control", placeholder="Email*") }}
                 {% endif %}
 
-                {% if form_urgent.email_3.errors %}
+                {% if form_emergency.email_3.errors %}
                   <ul class="errors">
-                    {% for error in form_urgent.email_3.errors %}
+                    {% for error in form_emergency.email_3.errors %}
                       <li class="txt-scoutGreen">{{ error }}</li>
                     {% endfor %}
                   </ul>
@@ -517,7 +517,7 @@
 
             <div class="row mt-5">
               <div class="col-md-12 text-end">
-                {{ form_urgent.submit_3(class_="btn bg-scoutYellow")}}
+                {{ form_emergency.submit_3(class_="btn bg-scoutYellow")}}
               </div>
             </div>
           </div>
@@ -526,9 +526,9 @@
     </form>
   </div>
 
-  <div class="tab-pane fade {% if active_tab == 'form-questions' %} show active {% endif %}" id="questions" role="tabpanel">
+  <div class="tab-pane fade {% if active_tab == 'form_questions' %} show active {% endif %}" id="questions" role="tabpanel">
     <form method="POST" action="{{ url_for('index.contact') }}" class="text-start" novalidate>
-      {{ form_urgent.csrf_token }}
+      {{ form_emergency.csrf_token }}
       <div class="container">        
         <div class="row justify-content-center">
           <div class="col-md-6 bg-light rounded p-3">

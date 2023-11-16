@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.db import get_db
 #from flaskr.auth import login_required
 from .helpers.form_helpers import form_filled_in
-from flaskr.forms import userForm, tutorForm, urgentForm, questionsForm
+from flaskr.forms import ScoutForm, TutorForm, EmergencyForm, QuestionsForm
 from .mail import mail
 from flask_mail import Message
 from collections import OrderedDict
@@ -47,15 +47,15 @@ def apply():
 @bp.route("/apply", methods=["GET", "POST"])
 def contact():
     # Initialize session data
-    for session_name in ["form_user_data", "form_tutor_1_data", "form_tutor_2_data", "form_urgent_data"]:
+    for session_name in ["form_user_data", "form_tutor_1_data", "form_tutor_2_data", "form_emergency_data"]:
         if session.get(session_name) is None:
             session[session_name] = OrderedDict()
 
     # Instantiate forms
-    form_user = userForm()
-    form_tutor = tutorForm()
-    form_urgent = urgentForm()
-    form_questions = questionsForm()
+    form_user = ScoutForm()
+    form_tutor = TutorForm()
+    form_emergency = EmergencyForm()
+    form_questions = QuestionsForm()
     
     # Define questions to ask user for approval
     questions = {
@@ -66,46 +66,42 @@ def contact():
     }
     
     # Concatenate forms and corresponding submit buttons (see definition in forms.py)
-    forms = [form_user, form_tutor, form_urgent, form_questions]
+    forms = [form_user, form_tutor, form_emergency, form_questions]
     submit_buttons = ["submit_1", "submit_2", "submit_3", "submit_4"]
     
     if request.method == "POST":
-        print("Debug1")
         # Loop through forms
         for form, submit_button in zip(forms, submit_buttons):
-            print("Debug2")
             # Check pressed submit button
             if getattr(form, submit_button).data:
                 # If form is VALID
                 if form.validate():
-                    # Save form data in session as dedicated class
-                    if form.name == "form_user":
-                        session[form.name + "_data"] = Scout(*[form.data[key] for key in form.field_names_scout])
+                    # Save form data in session using dedicated class
+                    if form.form_name == "form_user":
+                        session[form.form_name + "_data"] = Scout(*[form.data[key] for key in form.field_names_scout])
                         # Render next form tab
-                        return render_template("index/apply.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, form_questions=form_questions, questions=questions, session=session,
-                                                                                user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data = session["form_tutor_2_data"], urgent_data=session["form_urgent_data"])
-                    elif form.name == "form_tutor":
-                        session[form.name + "_1_data"] = Tutor(*[form.data[key] for key in form.field_names_tutor_1])
-                        session[form.name + "_2_data"] = Tutor(*[form.data[key] for key in form.field_names_tutor_2])
+                        return render_template("index/apply.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_emergency=form_emergency, form_questions=form_questions, questions=questions, session=session,
+                                                                                user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data = session["form_tutor_2_data"], urgent_data=session["form_emergency_data"])
+                    elif form.form_name == "form_tutor":
+                        session[form.form_name + "_1_data"] = Tutor(*[form.data[key] for key in form.field_names_tutor_1])
+                        session[form.form_name + "_2_data"] = Tutor(*[form.data[key] for key in form.field_names_tutor_2])
                         # Render next form tab
-                        return render_template("index/apply.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, form_questions=form_questions, questions=questions, session=session,
-                                                                                user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data = session["form_tutor_2_data"], urgent_data=session["form_urgent_data"])
-                    elif form.name == "form_urgent":
-                        session[form.name + "_data"] = Tutor(*[form.data[key] for key in form.field_names_emergency])
+                        return render_template("index/apply.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_emergency=form_emergency, form_questions=form_questions, questions=questions, session=session,
+                                                                                user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data = session["form_tutor_2_data"], urgent_data=session["form_emergency_data"])
+                    elif form.form_name == "form_emergency":
+                        session[form.form_name + "_data"] = Tutor(*[form.data[key] for key in form.field_names_emergency])
                         # Render next form tab
-                        return render_template("index/apply.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, form_questions=form_questions, questions=questions, session=session,
-                                                                                user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data = session["form_tutor_2_data"], urgent_data=session["form_urgent_data"])
-                    # Last form
+                        return render_template("index/apply.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_emergency=form_emergency, form_questions=form_questions, questions=questions, session=session,
+                                                                                user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data = session["form_tutor_2_data"], urgent_data=session["form_emergency_data"])
+                    # Last form (form_questions)
                     else:
-                        session[form.name + "_data"] = form.data
+                        session[form.form_name + "_data"] = form.data
                         
-                        # Create object in memory
+                        # Create objects in memory (if done previously, the new requests taking place on form submits delete it from memory)
                         scout = session["form_user_data"]
                         tutor_1 = session["form_tutor_1_data"]
                         tutor_2 = session["form_tutor_2_data"]
-                        tutor_3 = session["form_urgent_data"]
-                        
-                        print(tutor_3)
+                        tutor_3 = session["form_emergency_data"]
                         
                         # Connect to database
                         db = get_db()
@@ -162,7 +158,6 @@ def contact():
                         
                         # Add tutor 3 to emergency table
                         # Check if tutor 3 exists
-                        print(tutor_3["number"])
                         exists = db.execute("SELECT id FROM emergency WHERE phone_number = ? AND email = ?", (tutor_3["number"], tutor_3["email"])).fetchone()
                         
                         # If tutor 3 does not exist, add to table
@@ -187,7 +182,7 @@ def contact():
                     db.commit()
                     
                     # Clear session
-                    for key in ["form_user_data", "form_tutor_1_data", "form_tutor_2_data", "form_urgent_data"]:
+                    for key in ["form_user_data", "form_tutor_1_data", "form_tutor_2_data", "form_emergency_data"]:
                         session.pop(key, default=None)
                     
                     # Flash success message
@@ -198,7 +193,7 @@ def contact():
                 
                 # If form is INVALID
                 else:
-                    return render_template("index/apply.html", active_tab=form.tab, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, form_questions=form_questions, questions=questions,
-                                                                                    user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data=session["form_tutor_2_data"], urgent_data=session["form_urgent_data"])
+                    return render_template("index/apply.html", active_tab=form.form_name, form_user=form_user, form_tutor=form_tutor, form_emergency=form_emergency, form_questions=form_questions, questions=questions,
+                                           user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data=session["form_tutor_2_data"], urgent_data=session["form_emergency_data"])
     if request.method == "GET":
-        return render_template("index/apply.html", active_tab="form-user", form_questions=form_questions, form_user=form_user, form_tutor=form_tutor, form_urgent=form_urgent, user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data=session["form_tutor_2_data"], urgent_data=session["form_urgent_data"], questions=questions)
+        return render_template("index/apply.html", active_tab="form_user", form_questions=form_questions, form_user=form_user, form_tutor=form_tutor, form_emergency=form_emergency, user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data=session["form_tutor_2_data"], urgent_data=session["form_emergency_data"], questions=questions)

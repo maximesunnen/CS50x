@@ -1,18 +1,12 @@
 from flask_wtf import FlaskForm
-
 import email_validator
-
 # Import fields required for form
 from wtforms import (StringField, TextAreaField, IntegerField, BooleanField,
                      RadioField, SelectField, EmailField, DateField, SubmitField)
-
-
 # Import validators
 from wtforms.validators import InputRequired, Length, Email
-
-
-class userForm(FlaskForm):
-    # Child
+class ScoutForm(FlaskForm):
+    # Details
     first_name = StringField('Virnumm', validators=[InputRequired()])
     last_name = StringField('Numm', validators=[InputRequired()])
     birthday = DateField('Gebuertsdatum')
@@ -24,21 +18,24 @@ class userForm(FlaskForm):
     diet = StringField("Ech hun e speziellen Régime ...")
     other_information = TextAreaField("Aner Informatiounen iwwert mech ...")
     
+    # Address
     house_number = StringField('Hausnummer', validators=[InputRequired()])
     street = StringField('Strooss', validators=[InputRequired()])
     town = StringField('Uertschaft', validators=[InputRequired()])
     zip = IntegerField('Postleitzuel', validators=[InputRequired()])
     country = SelectField('Land', choices=["Luxembourg", "Belgique", "France", "Deutschland"], default="Luxembourg", validators=[InputRequired()])
     
+    # Submit button
     submit_1 = SubmitField("Weider")
     
+    # Field names
     field_names_scout = ["first_name", "last_name", "birthday", "gender", "number", "branch", "email", "house_number", "street", "town", "zip", "country", "allergies", "diet", "other_information"]
     
-    tab = "form-user"
-    name = "form_user"
-    redirect_tab = "form-tutor"
+    # Form name and redirect tab
+    form_name = "form_user"
+    redirect_tab = "form_tutor"
     
-class tutorForm(FlaskForm):
+class TutorForm(FlaskForm):
     # First tutor
     first_name_1 = StringField('Virnumm', validators=[InputRequired()])
     last_name_1 = StringField('Numm', validators=[InputRequired()])
@@ -51,39 +48,46 @@ class tutorForm(FlaskForm):
     number_2 = StringField('Handynummer')
     email_2 = EmailField('Email')
     
+    # Submit button
     submit_2 = SubmitField("Weider")
     
+    # Field names
     field_names_tutor_1 = ["first_name_1", "last_name_1", "number_1", "email_1"]
     field_names_tutor_2 = ["first_name_2", "last_name_2", "number_2", "email_2"]
     
-    tab = "form-tutor"
-    name = "form_tutor"
-    redirect_tab = "form-urgent"
+    # Form name and redirect tab
+    form_name = "form_tutor"
+    redirect_tab = "form_emergency"
     
-class urgentForm(FlaskForm):
+class EmergencyForm(FlaskForm):
+    # Emergency contact
     first_name_3 = StringField('Virnumm', validators=[InputRequired()])
     last_name_3 = StringField('Numm', validators=[InputRequired()])
     number_3 = StringField('Handynummer', validators=[InputRequired()])
     email_3 = EmailField('Email', validators=[InputRequired(), Email()])
     
+    # Submit button
     submit_3 = SubmitField("Weider")
     
+    # Field names
     field_names_emergency = ["first_name_3", "last_name_3", "number_3", "email_3"]
     
-    tab = "form-urgent"
-    name = "form_urgent"
-    redirect_tab = "form-questions"
+    # Form name and redirect tab
+    form_name = "form_emergency"
+    redirect_tab = "form_questions"
     
-class questionsForm(FlaskForm):
+class QuestionsForm(FlaskForm):
+    # Questions
     pictures = BooleanField("Pictures")
     social_media = BooleanField("Social Media")
     contact = BooleanField("Contact")
     home_alone = BooleanField("Home Alone")
     
+    # Submit button
     submit_4 = SubmitField("Umellen")
     
-    tab = "form-questions"
-    name = "form_questions"
+    # Form name and redirect tab
+    form_name = "form_questions"
     redirect_tab = ""
 
     
