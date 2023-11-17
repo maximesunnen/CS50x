@@ -7,7 +7,6 @@ from flask import (
 #from flaskr.auth import login_required
 from flaskr.db import get_db
 from flaskr.forms import ScoutForm, TutorForm, EmergencyForm, QuestionsForm
-from collections import OrderedDict
 from .classes import Scout, Tutor
 
 # Email imports
@@ -53,15 +52,15 @@ def contact():
     # Initialize session data
     for session_name in ["form_user_data", "form_tutor_1_data", "form_tutor_2_data", "form_emergency_data"]:
         if session.get(session_name) is None:
-            session[session_name] = OrderedDict()
-
+            session[session_name] = {}
+    
     # Instantiate forms
     form_user = ScoutForm()
     form_tutor = TutorForm()
     form_emergency = EmergencyForm()
     form_questions = QuestionsForm()
     
-    # Define questions to ask user for approval
+    # Questions
     questions = {
         "pictures": "Ech sin domat averstanen, dass vu mengem Kand Fotoe gemaach gin.",
         "social_media": "Ech sin domat averstanen, dass Fotoen, déi am Laf vu (Gruppen)Aktivitéiten vu mengem Kand gemach gin, op de soziale Medien (Facebook) vum Käler Scoutsgrupp gedeelt kenne gin.",
@@ -69,7 +68,7 @@ def contact():
         "home_alone": "Mäi Kand dierf no der Versammlung eleng heem goen."
     }
     
-    # Concatenate forms and corresponding submit buttons (see definition in forms.py)
+    # Forms and submit buttons as list (see definition in forms.py)
     forms = [form_user, form_tutor, form_emergency, form_questions]
     submit_buttons = ["submit_1", "submit_2", "submit_3", "submit_4"]
     
@@ -80,32 +79,41 @@ def contact():
             if getattr(form, submit_button).data:
                 # If form is VALID
                 if form.validate():
-                    # Save form data in session using dedicated class
-                    if form.form_name == "form_user":
-                        session[form.form_name + "_data"] = Scout(*[form.data[key] for key in form.field_names_scout])
+                    # Save form data in session using dedicated class [saving in session leads to SERIALIZATION, custom encoder in __init__.py]
+                    if form.name == "form_user":
+                        scout = Scout(*[form.data[key] for key in form.field_names_scout])
+                        session[form.name + "_data"] = scout
+                        
                         # Render next form tab
                         return render_template("index/apply.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_emergency=form_emergency, form_questions=form_questions, questions=questions, session=session,
                                                                                 user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data = session["form_tutor_2_data"], urgent_data=session["form_emergency_data"])
-                    elif form.form_name == "form_tutor":
-                        session[form.form_name + "_1_data"] = Tutor(*[form.data[key] for key in form.field_names_tutor_1])
-                        session[form.form_name + "_2_data"] = Tutor(*[form.data[key] for key in form.field_names_tutor_2])
+                    elif form.name == "form_tutor":
+                        tutor_1 = Tutor(*[form.data[key] for key in form.field_names_tutor_1])
+                        session[form.name + "_1_data"] = tutor_1
+                        
+                        tutor_2 = Tutor(*[form.data[key] for key in form.field_names_tutor_2])
+                        session[form.name + "_2_data"] = tutor_2
+                        
                         # Render next form tab
                         return render_template("index/apply.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_emergency=form_emergency, form_questions=form_questions, questions=questions, session=session,
                                                                                 user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data = session["form_tutor_2_data"], urgent_data=session["form_emergency_data"])
-                    elif form.form_name == "form_emergency":
-                        session[form.form_name + "_data"] = Tutor(*[form.data[key] for key in form.field_names_emergency])
+                    elif form.name == "form_emergency":
+                        tutor_3 = Tutor(*[form.data[key] for key in form.field_names_emergency])
+                        session[form.name + "_data"] = tutor_3
+                        
                         # Render next form tab
                         return render_template("index/apply.html", active_tab = form.redirect_tab, form_user=form_user, form_tutor=form_tutor, form_emergency=form_emergency, form_questions=form_questions, questions=questions, session=session,
                                                                                 user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data = session["form_tutor_2_data"], urgent_data=session["form_emergency_data"])
                     # Last form (form_questions)
                     else:
-                        session[form.form_name + "_data"] = form.data
+                        session[form.name + "_data"] = form.data
                         
-                        # Create objects in memory (if done previously, the new requests taking place on form submits delete it from memory)
-                        scout = session["form_user_data"]
-                        tutor_1 = session["form_tutor_1_data"]
-                        tutor_2 = session["form_tutor_2_data"]
-                        tutor_3 = session["form_emergency_data"]
+                        # Instantiate objects using from_dict method
+                        scout = Scout.from_dict(session["form_user_data"])
+                        tutor_1 = Tutor.from_dict(session["form_tutor_1_data"])
+                        tutor_2 = Tutor.from_dict(session["form_tutor_2_data"])
+                        tutor_3 = Tutor.from_dict(session["form_emergency_data"])
+                        questions = session["form_questions_data"]
                         
                         # Connect to database
                         db = get_db()
@@ -113,66 +121,66 @@ def contact():
                         # Add scout to user table
                         try:
                             db.execute("INSERT INTO user (first_name, last_name, birthday, gender, number, branch, email, allergies, diet, other_information) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                   (scout["first_name"], scout["last_name"], scout["birthday"], scout["gender"], scout["number"], scout["branch"], scout["email"], scout["allergies"], scout["diet"], scout["other"]))
+                                   (scout.first_name, scout.last_name, scout.birthday, scout.gender, scout.number, scout.branch, scout.email, scout.allergies, scout.diet, scout.other))
                         except db.IntegrityError:
                             flash("E Feeler ass opgetrueden. Feeler Code 100.")
                             
                         # Get ID of added scout
                         try:
-                            scout_id = db.execute("SELECT id FROM user WHERE first_name = ? AND last_name = ? AND birthday = ?", (scout["first_name"], scout["last_name"], scout["birthday"])).fetchone()
+                            scout_id = db.execute("SELECT id FROM user WHERE first_name = ? AND last_name = ? AND birthday = ?", (scout.first_name, scout.last_name, scout.birthday)).fetchone()
                         except db.IntegrityError:
                             flash("E Feeler ass opgetrueden. Feeler Code 101.")
                             
                         # Add address to address table
                         try:
-                            db.execute("INSERT INTO address (house_number, street, town, zip, country, user_id) VALUES (?, ?, ?, ?, ?, ?)", (scout["house_number"], scout["street"], scout["town"], scout["zip"], scout["country"], scout_id[0]))
+                            db.execute("INSERT INTO address (house_number, street, town, zip, country, user_id) VALUES (?, ?, ?, ?, ?, ?)", (scout.house_number, scout.street, scout.town, scout.zip, scout.country, scout_id[0]))
                         except db.IntegrityError:
                             flash("E Feeler ass opgetrueden. Feeler Code 102.")
                         
                         # Add tutor_1 to parent table
                         # Check if tutor exists
-                        exists = db.execute("SELECT id FROM parent WHERE phone_number = ? AND email = ?", (tutor_1["number"], tutor_1["email"])).fetchone()
+                        tutor_1_id = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_1.first_name, tutor_1.last_name, tutor_1.number, tutor_1.email)).fetchone()
                         
                         # If tutor does not exist, add to table
-                        if exists is None:
+                        if tutor_1_id is None:
                             try:
-                                db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (tutor_1["first_name"], tutor_1["last_name"], tutor_1["number"], tutor_1["email"]))
+                                print("executing")
+                                db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (tutor_1.first_name, tutor_1.last_name, tutor_1.number, tutor_1.email))
                             except db.IntegrityError:
                                 flash("E Feeler ass opgetrueden. Feeler Code 103.")
                         
-                        # Get id tutor 1
-                        tutor_1_id = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_1["first_name"], tutor_1["last_name"], tutor_1["number"], tutor_1["email"])).fetchone()
-                            
-                            
+                        # Get tutor_1 id
+                        tutor_1_id = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_1.first_name, tutor_1.last_name, tutor_1.number, tutor_1.email)).fetchone()
+
                         # Add tutor 2 to parent table
                         # Check if tutor was submitted
-                        if tutor_2["first_name"] != '':
+                        if tutor_2.first_name != '':
                             # Check if tutor exists
-                            exists = db.execute("SELECT id FROM parent WHERE phone_number = ? AND email = ?", (tutor_2["number"], tutor_2["email"])).fetchone()
+                            tutor_2_id = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_2.first_name, tutor_2.last_name, tutor_2.number, tutor_2.email)).fetchone()
                             
                             # If tutor does not exist, add to table
-                            if exists is None:
+                            if tutor_2_id is None:
                                 try:
-                                    db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (tutor_2["first_name"], tutor_2["last_name"], tutor_2["number"], tutor_2["email"]))
+                                    db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (tutor_2.first_name, tutor_2.last_name, tutor_2.number, tutor_2.email))
                                 except db.IntegrityError:
-                                    flash("E Feeler ass opgetrueden. Feeler Code 107.")
+                                    flash("E Feeler ass opgetrueden. Feeler Code 104.")
                         
-                        # Get id of tutor 2
-                            tutor_2_id = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_2["first_name"], tutor_2["last_name"], tutor_2["number"], tutor_2["email"])).fetchone()
-                        
+                        # Get tutor_2 id
+                        tutor_2_id = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_2.first_name, tutor_2.last_name, tutor_2.number, tutor_2.email)).fetchone()
+
                         # Add tutor 3 to emergency table
                         # Check if tutor 3 exists
-                        exists = db.execute("SELECT id FROM emergency WHERE phone_number = ? AND email = ?", (tutor_3["number"], tutor_3["email"])).fetchone()
-                        
+                        tutor_3_id = db.execute("SELECT id FROM emergency WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_3.first_name, tutor_3.last_name, tutor_3.number, tutor_3.email)).fetchone()
+
                         # If tutor 3 does not exist, add to table
-                        if exists is None:
+                        if tutor_3_id is None:
                             try:
-                                db.execute("INSERT INTO emergency (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (tutor_3["first_name"], tutor_3["last_name"], tutor_3["number"], tutor_3["email"]))
+                                db.execute("INSERT INTO emergency (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (tutor_3.first_name, tutor_3.last_name, tutor_3.number, tutor_3.email))
                             except db.IntegrityError:
                                 flash("E Feeler ass opgetrueden. Feeler Code 105.")
-                        
-                        # Get id of tutor 3
-                        tutor_3_id = db.execute("SELECT id FROM emergency WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_3["first_name"], tutor_3["last_name"], tutor_3["number"], tutor_3["email"])).fetchone()
+                                
+                        # Get tutor_3 id 
+                        tutor_3_id = db.execute("SELECT id FROM emergency WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_3.first_name, tutor_3.last_name, tutor_3.number, tutor_3.email)).fetchone()
                         
                         # Link tutor-child-emergency_contact
                         try:
@@ -181,11 +189,54 @@ def contact():
                                 db.execute("INSERT INTO parent_child_emergency (parent_id, child_id, emergency_id) VALUES (?, ?, ?)", (tutor_2_id[0], scout_id[0], tutor_3_id[0]))
                         except db.IntegrityError:
                             flash("E Feeler ass opgetrueden. Feeler Code 106.")
+                            
+                        # Add answers to questions to database
+                        try:
+                            db.execute("INSERT INTO data_protection (child_id, pictures, social_media, contact, home_alone) VALUES (?, ?, ?, ?, ?)", (scout_id[0], questions["pictures"], questions["social_media"], questions["contact"], questions["home_alone"]))
+                        except db.IntegrityError:
+                            flash("E Feeler ass opgetrueden. Feeler Code 107.")
+
                         
                     # Commit database changes
                     db.commit()
                     
-                    # Clear session
+                    # Send Email
+                    # Email message
+                    msg = Message("Nei Umeldung bei den Wëllefcher", sender="peter@mailtrap.io", recipients=["paul@mailtrap.io"])
+                    
+                    # Email attachment
+                    # Excel columns
+                    objects = [scout, tutor_1, tutor_2, tutor_3]
+                    columns = [key for obj in objects for key in obj.__dict__] + form_questions.field_names_questions
+                    print(columns)
+                    # Excel data
+                    scout_data = [getattr(scout, key) for key in scout.__dict__]
+                    tutor_1_data = [getattr(tutor_1, key) for key in tutor_1.__dict__]
+                    tutor_2_data = [getattr(tutor_2, key) for key in tutor_2.__dict__]
+                    tutor_3_data = [getattr(tutor_3, key) for key in tutor_3.__dict__]
+                    questions_data = list(session["form_questions_data"].values())[:4]
+                    
+                    # Excel dataframe
+                    df = DataFrame([scout_data + tutor_1_data + tutor_2_data + tutor_3_data + questions_data], columns=columns)
+                    print(df)
+                    
+                    # Temporary xlsx file
+                    tmp_xlsx = Workbook().save("flaskr/tmp.xlsx")
+                    
+                    # Data frame to Excel
+                    df.to_excel("flaskr/tmp.xlsx", index=False)
+                    
+                    # Attach file to email message
+                    with open("flaskr/tmp.xlsx", "rb") as fp:
+                        msg.attach("tmp.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fp.read())
+                        
+                    # Send mail
+                    mail.send(msg)
+                    
+                    # Remove temporary file
+                    os.remove("flaskr/tmp.xlsx")
+                    
+                    # Clear session information
                     for key in ["form_user_data", "form_tutor_1_data", "form_tutor_2_data", "form_emergency_data"]:
                         session.pop(key, default=None)
                     
@@ -197,7 +248,7 @@ def contact():
                 
                 # If form is INVALID
                 else:
-                    return render_template("index/apply.html", active_tab=form.form_name, form_user=form_user, form_tutor=form_tutor, form_emergency=form_emergency, form_questions=form_questions, questions=questions,
+                    return render_template("index/apply.html", active_tab=form.name, form_user=form_user, form_tutor=form_tutor, form_emergency=form_emergency, form_questions=form_questions, questions=questions,
                                            user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data=session["form_tutor_2_data"], urgent_data=session["form_emergency_data"])
     if request.method == "GET":
         return render_template("index/apply.html", active_tab="form_user", form_questions=form_questions, form_user=form_user, form_tutor=form_tutor, form_emergency=form_emergency, user_data=session["form_user_data"], tutor_1_data=session["form_tutor_1_data"], tutor_2_data=session["form_tutor_2_data"], urgent_data=session["form_emergency_data"], questions=questions)
