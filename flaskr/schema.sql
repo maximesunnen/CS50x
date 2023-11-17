@@ -63,3 +63,12 @@ CREATE TABLE parent_child_emergency (
   FOREIGN KEY (child_id) REFERENCES user (id),
   FOREIGN KEY (emergency_id) REFERENCES emergency (id)
 );
+
+CREATE TABLE data_protection (
+  child_id INTEGER NOT NULL,
+  pictures BOOLEAN NOT NULL,
+  social_media BOOLEAN NOT NULL,
+  contact BOOLEAN NOT NULL,
+  home_alone BOOLEAN NOT NULL,
+  FOREIGN KEY (child_id) REFERENCES user (id)
+)
