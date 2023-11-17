@@ -16,7 +16,7 @@ class ScoutForm(FlaskForm):
     email = EmailField('Email')
     allergies = StringField("Ech hun Allergien op ...")
     diet = StringField("Ech hun e speziellen Régime ...")
-    other_information = TextAreaField("Aner Informatiounen iwwert mech ...")
+    other = TextAreaField("Aner Informatiounen iwwert mech ...")
     
     # Address
     house_number = StringField('Hausnummer', validators=[InputRequired()])
@@ -29,10 +29,10 @@ class ScoutForm(FlaskForm):
     submit_1 = SubmitField("Weider")
     
     # Field names
-    field_names_scout = ["first_name", "last_name", "birthday", "gender", "number", "branch", "email", "house_number", "street", "town", "zip", "country", "allergies", "diet", "other_information"]
+    field_names_scout = ["first_name", "last_name", "birthday", "gender", "number", "branch", "email", "house_number", "street", "town", "zip", "country", "allergies", "diet", "other"]
     
     # Form name and redirect tab
-    form_name = "form_user"
+    name = "form_user"
     redirect_tab = "form_tutor"
     
 class TutorForm(FlaskForm):
@@ -56,7 +56,7 @@ class TutorForm(FlaskForm):
     field_names_tutor_2 = ["first_name_2", "last_name_2", "number_2", "email_2"]
     
     # Form name and redirect tab
-    form_name = "form_tutor"
+    name = "form_tutor"
     redirect_tab = "form_emergency"
     
 class EmergencyForm(FlaskForm):
@@ -73,7 +73,7 @@ class EmergencyForm(FlaskForm):
     field_names_emergency = ["first_name_3", "last_name_3", "number_3", "email_3"]
     
     # Form name and redirect tab
-    form_name = "form_emergency"
+    name = "form_emergency"
     redirect_tab = "form_questions"
     
 class QuestionsForm(FlaskForm):
@@ -86,8 +86,11 @@ class QuestionsForm(FlaskForm):
     # Submit button
     submit_4 = SubmitField("Umellen")
     
+    # Field names
+    field_names_questions = ["pictures", "social_media", "contact", "home_alone"]
+    
     # Form name and redirect tab
-    form_name = "form_questions"
+    name = "form_questions"
     redirect_tab = ""
 
     
