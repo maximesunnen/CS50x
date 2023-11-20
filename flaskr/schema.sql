@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS address;
 DROP TABLE IF EXISTS parent;
 DROP TABLE IF EXISTS emergency;
 DROP TABLE IF EXISTS parent_child_emergency;
+DROP TABLE IF EXISTS data_protection;
 
 -- Table to store user (child) information
 CREATE TABLE user (
@@ -31,21 +32,24 @@ CREATE TABLE address (
   FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
--- Table to store information on child's parent
+-- Table storing information on child's parent
+-- no UNIQUE constraints: i check if a parent alredy exists in the db in my backend
 CREATE TABLE parent (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
   phone_number TEXT NOT NULL,
-  email TEXT NOT NULL UNIQUE
+  email TEXT NOT NULL
 );
 
+-- Table storing information on child's emergency contact
+-- no UNIQUE constraints: i check if an emergency contact alredy exists in the db in my backend
 CREATE TABLE emergency (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
   phone_number TEXT NOT NULL,
-  email TEXT NOT NULL UNIQUE
+  email TEXT NOT NULL
 );
 
 -- Junction table with composite key
