@@ -122,52 +122,47 @@ def contact():
                         try:
                             db.execute("INSERT INTO user (first_name, last_name, birthday, gender, number, branch, email, allergies, diet, other_information) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                                    (scout.first_name, scout.last_name, scout.birthday, scout.gender, scout.number, scout.branch, scout.email, scout.allergies, scout.diet, scout.other))
-                        except db.IntegrityError:
-                            flash("E Feeler ass opgetrueden. Feeler Code 100.")
+                        except Exception as e:
+                            print(f"An error occurred (Error Code 100): {e}")
                             
                         # Get ID of added scout
                         try:
                             scout_id = db.execute("SELECT id FROM user WHERE first_name = ? AND last_name = ? AND birthday = ?", (scout.first_name, scout.last_name, scout.birthday)).fetchone()
-                        except db.IntegrityError:
-                            flash("E Feeler ass opgetrueden. Feeler Code 101.")
+                        except Exception as e:
+                            print(f"An error occurred (Error Code 101): {e}")
                             
                         # Add address to address table
                         try:
                             db.execute("INSERT INTO address (house_number, street, town, zip, country, user_id) VALUES (?, ?, ?, ?, ?, ?)", (scout.house_number, scout.street, scout.town, scout.zip, scout.country, scout_id[0]))
-                        except db.IntegrityError:
-                            flash("E Feeler ass opgetrueden. Feeler Code 102.")
+                        except Exception as e:
+                            print(f"An error occurred (Error Code 102): {e}")
                         
                         # Add tutor_1 to parent table
                         # Check if tutor exists
                         tutor_1_id = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_1.first_name, tutor_1.last_name, tutor_1.number, tutor_1.email)).fetchone()
-                        
                         # If tutor does not exist, add to table
                         if tutor_1_id is None:
                             try:
-                                print("executing")
                                 db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (tutor_1.first_name, tutor_1.last_name, tutor_1.number, tutor_1.email))
-                            except db.IntegrityError:
-                                flash("E Feeler ass opgetrueden. Feeler Code 103.")
+                                # Get tutor_1 id
+                                tutor_1_id = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_1.first_name, tutor_1.last_name, tutor_1.number, tutor_1.email)).fetchone()
+                            except Exception as e:
+                                print(f"An error occurred (Error Code 103): {e}")
                         
-                        # Get tutor_1 id
-                        tutor_1_id = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_1.first_name, tutor_1.last_name, tutor_1.number, tutor_1.email)).fetchone()
-
                         # Add tutor 2 to parent table
                         # Check if tutor was submitted
                         if tutor_2.first_name != '':
                             # Check if tutor exists
                             tutor_2_id = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_2.first_name, tutor_2.last_name, tutor_2.number, tutor_2.email)).fetchone()
-                            
                             # If tutor does not exist, add to table
                             if tutor_2_id is None:
                                 try:
                                     db.execute("INSERT INTO parent (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (tutor_2.first_name, tutor_2.last_name, tutor_2.number, tutor_2.email))
-                                except db.IntegrityError:
-                                    flash("E Feeler ass opgetrueden. Feeler Code 104.")
+                                    # Get tutor_2 id
+                                    tutor_2_id = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_2.first_name, tutor_2.last_name, tutor_2.number, tutor_2.email)).fetchone()
+                                except Exception as e:
+                                    print(f"An error occurred (Error Code 104): {e}")
                         
-                        # Get tutor_2 id
-                        tutor_2_id = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_2.first_name, tutor_2.last_name, tutor_2.number, tutor_2.email)).fetchone()
-
                         # Add tutor 3 to emergency table
                         # Check if tutor 3 exists
                         tutor_3_id = db.execute("SELECT id FROM emergency WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_3.first_name, tutor_3.last_name, tutor_3.number, tutor_3.email)).fetchone()
@@ -176,12 +171,12 @@ def contact():
                         if tutor_3_id is None:
                             try:
                                 db.execute("INSERT INTO emergency (first_name, last_name, phone_number, email) VALUES (?, ?, ?, ?)", (tutor_3.first_name, tutor_3.last_name, tutor_3.number, tutor_3.email))
-                            except db.IntegrityError:
-                                flash("E Feeler ass opgetrueden. Feeler Code 105.")
-                                
-                        # Get tutor_3 id 
-                        tutor_3_id = db.execute("SELECT id FROM emergency WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_3.first_name, tutor_3.last_name, tutor_3.number, tutor_3.email)).fetchone()
-                        
+                                # Get tutor_3 id 
+                                tutor_3_id = db.execute("SELECT id FROM emergency WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_3.first_name, tutor_3.last_name, tutor_3.number, tutor_3.email)).fetchone()
+
+                            except Exception as e:
+                                print(f"An error occurred (Error Code 105): {e}")
+
                         # Link tutor-child-emergency_contact
                         try:
                             db.execute("INSERT INTO parent_child_emergency (parent_id, child_id, emergency_id) VALUES (?, ?, ?)", (tutor_1_id[0], scout_id[0], tutor_3_id[0]))
