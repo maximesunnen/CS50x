@@ -446,8 +446,8 @@
               <h4 class="text-start mb-3">Am Fall wou d'Tuteuren nët areechbar sin, soll dës Persoun kontaktéiert gin</h4>
               <div class="col-md-4">
                 <!-- First name -->
-                {% if urgent_data["first_name_3"] %}
-                  {{ form_emergency.first_name_3(class_="form-control", value=urgent_data["first_name_3"]) }}
+                {% if urgent_data.first_name_3 %}
+                  {{ form_emergency.first_name_3(class_="form-control", value=urgent_data.first_name_3) }}
                 {% else %}
                   {{ form_emergency.first_name_3(class_="form-control", placeholder="Virnumm*") }}
                 {% endif %}
@@ -463,8 +463,8 @@
 
               <div class="col-md-4">
                 <!-- Last name -->
-                {% if urgent_data["last_name_3"] %}
-                  {{ form_emergency.last_name_3(class_="form-control", value=urgent_data["last_name_3"]) }}
+                {% if urgent_data.last_name_3 %}
+                  {{ form_emergency.last_name_3(class_="form-control", value=urgent_data.last_name_3) }}
                 {% else %}
                   {{ form_emergency.last_name_3(class_="form-control", placeholder="Nonumm*") }}
                 {% endif %}
@@ -480,8 +480,8 @@
 
               <div class="col-md-4">
                 <!-- Number -->
-                {% if urgent_data["number_3"] %}
-                  {{ form_emergency.number_3(class_="form-control", value=urgent_data["number_3"]) }}
+                {% if urgent_data.number_3 %}
+                  {{ form_emergency.number_3(class_="form-control", value=urgent_data.number_3) }}
                 {% else %}
                   {{ form_emergency.number_3(class_="form-control", placeholder="Nummer*") }}
                 {% endif %}
@@ -499,8 +499,8 @@
             <div class="row">
               <div class="col-md-8">
                 <!-- Number -->
-                {% if urgent_data["email_3"] %}
-                  {{ form_emergency.email_3(class_="form-control", value=urgent_data["email_3"]) }}
+                {% if urgent_data.email_3 %}
+                  {{ form_emergency.email_3(class_="form-control", value=urgent_data.email_3) }}
                 {% else %}
                   {{ form_emergency.email_3(class_="form-control", placeholder="Email*") }}
                 {% endif %}

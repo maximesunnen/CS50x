@@ -4,26 +4,26 @@ import email_validator
 from wtforms import (StringField, TextAreaField, IntegerField, BooleanField,
                      RadioField, SelectField, EmailField, DateField, SubmitField)
 # Import validators
-from wtforms.validators import InputRequired, Length, Email
+from wtforms.validators import InputRequired, Length, Email, Optional
 class ScoutForm(FlaskForm):
     # Details
     first_name = StringField('Virnumm', validators=[InputRequired()])
     last_name = StringField('Numm', validators=[InputRequired()])
     birthday = DateField('Gebuertsdatum')
-    gender = RadioField('Geschlecht', choices=["Weiblech", "Männlech"])
-    number = IntegerField('Handynummer', validators=[InputRequired()])
-    branch = SelectField("Branche", choices=["Wëllefcher"], default="Wëllefcher")
+    gender = RadioField('Geschlecht', choices=['Weiblech', 'Männlech'])
+    number = IntegerField('Handynummer', validators=[Optional(strip_whitespace=True)])
+    branch = SelectField('Branche', choices=['Wëllefcher'], default='Wëllefcher')
     email = EmailField('Email')
-    allergies = StringField("Ech hun Allergien op ...")
-    diet = StringField("Ech hun e speziellen Régime ...")
-    other = TextAreaField("Aner Informatiounen iwwert mech ...")
+    allergies = StringField('Ech hun Allergien op ...')
+    diet = StringField('Ech hun e speziellen Régime ...')
+    other = TextAreaField('Aner Informatiounen iwwert mech ...')
     
     # Address
     house_number = StringField('Hausnummer', validators=[InputRequired()])
     street = StringField('Strooss', validators=[InputRequired()])
     town = StringField('Uertschaft', validators=[InputRequired()])
     zip = IntegerField('Postleitzuel', validators=[InputRequired()])
-    country = SelectField('Land', choices=["Luxembourg", "Belgique", "France", "Deutschland"], default="Luxembourg", validators=[InputRequired()])
+    country = SelectField('Land', choices=['Lëtzebuerg', 'Belgique', 'France', 'Deutschland'], default='Lëtzebuerg', validators=[InputRequired()])
     
     # Submit button
     submit_1 = SubmitField("Weider")
