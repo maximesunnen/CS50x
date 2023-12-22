@@ -14,7 +14,6 @@ def get_db():
 
     return g.db
 
-
 def close_db(e=None):
     db = g.pop('db', None)
 
@@ -26,7 +25,6 @@ def init_db():
 
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
-
 
 @click.command('init-db')
 def init_db_command():

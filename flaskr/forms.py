@@ -1,5 +1,4 @@
 from flask_wtf import FlaskForm
-import email_validator
 # Import fields required for form
 from wtforms import (StringField, TextAreaField, IntegerField, BooleanField,
                      RadioField, SelectField, EmailField, DateField, SubmitField)

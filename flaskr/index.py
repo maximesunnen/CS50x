@@ -162,6 +162,8 @@ def contact():
                                     tutor_2_id = db.execute("SELECT id FROM parent WHERE first_name = ? AND last_name = ? AND phone_number = ? AND email = ?", (tutor_2.first_name, tutor_2.last_name, tutor_2.number, tutor_2.email)).fetchone()
                                 except Exception as e:
                                     print(f"An error occurred (Error Code 104): {e}")
+                        else:
+                            tutor_2_id = None
                         
                         # Add tutor 3 to emergency table
                         # Check if tutor 3 exists
