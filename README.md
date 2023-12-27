@@ -1,6 +1,8 @@
 # Flask web application for user registration with implemented SQL database backend and mail support
 This repository contains the source code for a template web application for a local scouts group in Luxembourg. The main functionality is the registration/application of new users with their personal information. This information, if passing backend validation, is stored inside a SQL user database. Additionally, if a registration is successful, an email is sent to a defined email address containing the information of the registered user as an `.xlsx` file.
 
+Video demo: https://youtu.be/NNTaPtdex5g
+
 >[!NOTE]
 >This website is in Luxembourgish. Most of the functionality, however, is self-explanatory.
 
